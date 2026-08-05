@@ -30,10 +30,4 @@ output "registry_id" {
 
 }
 
-output "iam_policy_arn" {
 
-  description = "IAM Policy ARN"
-
-  value = aws_iam_policy.ecr.arn
-
-}

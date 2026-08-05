@@ -6,3 +6,18 @@ module "vpc" {
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
 }
+
+module "ecr" {
+
+  source = "../../modules/runtime/ecr"
+
+  repository_name = "my-application"
+
+
+  tags = {
+    Environment = "prod"
+    Project     = "terraform-project"
+    ManagedBy   = "Terraform"
+  }
+
+}

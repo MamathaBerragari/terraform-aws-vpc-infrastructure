@@ -37,13 +37,7 @@ variable "scan_on_push" {
 
 }
 
-variable "kms_key_arn" {
 
-  description = "Existing KMS Key ARN."
-
-  type = string
-
-}
 
 variable "lifecycle_max_image_count" {
 
