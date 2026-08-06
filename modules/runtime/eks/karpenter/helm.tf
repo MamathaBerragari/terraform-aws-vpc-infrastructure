@@ -7,23 +7,20 @@ resource "helm_release" "karpenter" {
   chart      = "karpenter"
   version    = var.karpenter_version
 
-  set {
-    name  = "settings.clusterName"
-    value = var.cluster_name
-  }
+  set = [
+    {
+      name  = "settings.clusterName"
+      value = var.cluster_name
+    },
 
-  set {
-    name  = "settings.clusterEndpoint"
-    value = var.cluster_endpoint
-  }
-
-  set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.karpenter_controller.arn
-  }
+    {
+      name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+      value = aws_iam_role.karpenter_controller.arn
+    }
+  ]
 
   depends_on = [
     aws_iam_role.karpenter_controller,
-    aws_sqs_queue.interruption_queue
+    aws_sqs_queue.interruption_queue,
   ]
 }

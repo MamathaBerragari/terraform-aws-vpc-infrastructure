@@ -46,7 +46,7 @@ variable "endpoint_private_access" {
 variable "endpoint_public_access" {
   description = "Enable Public API Endpoint"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "public_access_cidrs" {
@@ -110,14 +110,7 @@ variable "ami_type" {
   default     = "AL2023_x86_64_STANDARD"
 }
 
-###############################################################
-# Security
-###############################################################
 
-variable "kms_key_arn" {
-  description = "Existing KMS Key ARN"
-  type        = string
-}
 
 ###############################################################
 # Logging
@@ -169,3 +162,14 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+###############################################################
+# Karpenter
+###############################################################
+
+variable "karpenter_version" {
+  description = "Karpenter Helm Chart Version"
+  type        = string
+  default     = "1.3.3"
+}
+
+

@@ -7,7 +7,10 @@ metadata:
 spec:
   amiFamily: AL2023
 
-  role: ${aws_iam_role.karpenter_node.name}
+  amiSelectorTerms:
+    - alias: al2023@latest
+
+  instanceProfile: ${aws_iam_instance_profile.karpenter_node.name}
 
   subnetSelectorTerms:
     - tags:
@@ -21,5 +24,8 @@ spec:
     Name: ${var.cluster_name}-karpenter-node
 YAML
 
-  depends_on = [helm_release.karpenter]
+  depends_on = [
+    aws_iam_instance_profile.karpenter_node,
+    helm_release.karpenter
+  ]
 }

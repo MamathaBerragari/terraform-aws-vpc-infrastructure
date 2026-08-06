@@ -4,7 +4,7 @@ resource "aws_eks_node_group" "default" {
 
   node_group_name = "${var.cluster_name}-default"
 
-  node_role_arn = var.node_role_arn
+  node_role_arn = aws_iam_role.node.arn
 
   subnet_ids = var.private_subnet_ids
 

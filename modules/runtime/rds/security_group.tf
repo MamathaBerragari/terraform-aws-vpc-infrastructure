@@ -1,6 +1,6 @@
 resource "aws_security_group" "rds" {
 
-  name        = "${local.name}-sg"
+  name = "${local.name}-sg"
 
   description = "Security Group for Amazon RDS"
 

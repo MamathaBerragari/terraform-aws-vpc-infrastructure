@@ -33,6 +33,8 @@ resource "aws_security_group" "nodes" {
     local.common_tags,
     {
       Name = "${var.cluster_name}-nodes-sg"
+
+      "karpenter.sh/discovery" = var.cluster_name
     }
   )
 }

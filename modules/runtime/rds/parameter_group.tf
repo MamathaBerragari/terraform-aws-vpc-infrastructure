@@ -1,6 +1,6 @@
 resource "aws_db_parameter_group" "this" {
 
-  name   = "${local.name}-parameter-group"
+  name = "${local.name}-parameter-group"
 
   family = "postgres16"
 
@@ -8,7 +8,7 @@ resource "aws_db_parameter_group" "this" {
 
   parameter {
 
-    name  = "log_connections"
+    name = "log_connections"
 
     value = "1"
 
@@ -16,7 +16,7 @@ resource "aws_db_parameter_group" "this" {
 
   parameter {
 
-    name  = "log_disconnections"
+    name = "log_disconnections"
 
     value = "1"
 
@@ -24,7 +24,7 @@ resource "aws_db_parameter_group" "this" {
 
   parameter {
 
-    name  = "log_statement"
+    name = "log_statement"
 
     value = "ddl"
 

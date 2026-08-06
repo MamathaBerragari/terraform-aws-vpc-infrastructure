@@ -21,3 +21,24 @@ module "ecr" {
   }
 
 }
+
+module "eks" {
+
+  source = "../../modules/runtime/eks"
+
+  cluster_name    = "prod-eks"
+  node_group_name = "default"
+
+  vpc_id = module.vpc.vpc_id
+
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  control_plane_subnet_ids = module.vpc.private_subnet_ids
+
+  tags = {
+    Environment = "prod"
+    Project     = "terraform-project"
+    ManagedBy   = "Terraform"
+  }
+
+}

@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "this" {
 
   name     = var.cluster_name
-  role_arn = var.cluster_role_arn
+  role_arn = aws_iam_role.cluster.arn
   version  = var.cluster_version
 
   vpc_config {
@@ -30,19 +30,8 @@ resource "aws_eks_cluster" "this" {
 
   }
 
-  enabled_cluster_log_types = var.enabled_log_types
+  enabled_cluster_log_types = var.enabled_cluster_log_types
 
-  encryption_config {
-
-    provider {
-
-      key_arn = var.kms_key_arn
-
-    }
-
-    resources = ["secrets"]
-
-  }
 
   tags = local.common_tags
 

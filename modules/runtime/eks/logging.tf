@@ -4,8 +4,6 @@ resource "aws_cloudwatch_log_group" "eks" {
 
   retention_in_days = 30
 
-  kms_key_id = var.kms_key_arn
-
   tags = local.common_tags
 
 }

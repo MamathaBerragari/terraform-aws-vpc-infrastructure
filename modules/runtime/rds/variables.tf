@@ -11,7 +11,7 @@ variable "database_name" {
 }
 
 variable "engine" {
-  type = string
+  type    = string
   default = "postgres"
 }
 
