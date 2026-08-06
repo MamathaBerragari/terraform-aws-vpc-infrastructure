@@ -17,11 +17,9 @@ resource "aws_eks_node_group" "default" {
   ]
 
   scaling_config {
-
-    desired_size = 2
-    min_size     = 2
-    max_size     = 5
-
+    desired_size = var.desired_size
+    min_size = var.min_size
+    max_size = var.max_size
   }
 
   launch_template {

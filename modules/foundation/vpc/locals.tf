@@ -7,7 +7,7 @@ locals {
     Module      = "VPC"
   }
 
-  az_names = data.aws_availability_zones.available.names
+  az_names = var.availability_zones
 
   public_subnets = {
     for idx, cidr in var.public_subnet_cidrs : cidr => {
