@@ -29,7 +29,7 @@ resource "aws_subnet" "private" {
     {
       Name = "${local.name_prefix}-private-subnet-${each.value.idx}"
        
-      "karpenter.sh/discovery" = "prod-eks"
+      "karpenter.sh/discovery" = "${var.environment}-eks"
     }
   )
 }

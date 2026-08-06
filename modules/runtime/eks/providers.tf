@@ -8,7 +8,6 @@ data "aws_eks_cluster_auth" "this" {
 
 
 provider "helm" {
-
   kubernetes = {
 
     host = data.aws_eks_cluster.this.endpoint
@@ -25,9 +24,7 @@ provider "helm" {
 
 
 provider "kubectl" {
-
   host = data.aws_eks_cluster.this.endpoint
-
   cluster_ca_certificate = base64decode(
     data.aws_eks_cluster.this.certificate_authority[0].data
   )
