@@ -1,10 +1,20 @@
 module "vpc" {
-  source = "../../modules/foundation/vpc"
 
-  environment          = var.environment
-  vpc_cidr             = var.vpc_cidr
-  public_subnet_cidrs  = var.public_subnet_cidrs
+  source     = "../../modules/foundation/vpc"
+  aws_region = var.aws_region
+
+  environment = var.environment
+
+  vpc_cidr = var.vpc_cidr
+
+
+  availability_zones = var.availability_zones
+
+
+  public_subnet_cidrs = var.public_subnet_cidrs
+
   private_subnet_cidrs = var.private_subnet_cidrs
+
 }
 
 module "ecr" {
@@ -26,8 +36,12 @@ module "eks" {
 
   source = "../../modules/runtime/eks"
 
-  cluster_name    = "test-eks"
-  node_group_name = "default"
+  cluster_name    = var.cluster_name
+  node_group_name = var.node_group_name
+
+  desired_size = var.desired_size
+  min_size     = var.min_size
+  max_size     = var.max_size
 
   vpc_id = module.vpc.vpc_id
 
