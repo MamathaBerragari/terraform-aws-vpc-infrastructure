@@ -31,4 +31,10 @@ resource "aws_security_group" "this" {
       Name = "${var.project_name}-${var.environment}-vpce-sg"
     }
   )
+
+  lifecycle {
+    ignore_changes = [
+      name
+    ]
+  }
 }
