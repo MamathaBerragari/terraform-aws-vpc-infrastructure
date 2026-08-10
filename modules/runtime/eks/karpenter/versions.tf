@@ -1,7 +1,5 @@
 terraform {
-
   required_providers {
-
     aws = {
       source = "hashicorp/aws"
     }
@@ -14,7 +12,5 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = "~> 1.14"
     }
-
   }
-
 }

@@ -21,3 +21,12 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   treat_missing_data = "notBreaching"
 
 }
+resource "aws_cloudwatch_log_group" "eks" {
+
+  name = "/aws/eks/${var.cluster_name}/cluster"
+
+  retention_in_days = 30
+
+  tags = local.common_tags
+
+}
