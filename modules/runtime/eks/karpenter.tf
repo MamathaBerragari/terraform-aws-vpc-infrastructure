@@ -6,7 +6,7 @@ module "karpenter" {
 
   cluster_name = var.cluster_name
 
-  karpenter_version = var.karpenter_version
+  karpenter_version = var.karpenter_chart_version
 
   oidc_provider_arn = aws_iam_openid_connect_provider.this.arn
 

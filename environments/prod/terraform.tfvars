@@ -1,5 +1,9 @@
 aws_region = "ap-south-1"
 
+karpenter_chart_version = "1.3.3"
+
+kubernetes_version = "1.31"
+
 interface_endpoints = [
   "ec2",
   "ecr.api",

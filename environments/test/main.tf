@@ -67,8 +67,11 @@ module "eks" {
 
   source = "../../modules/runtime/eks"
 
-  cluster_name    = var.cluster_name
-  node_group_name = var.node_group_name
+  cluster_name       = var.cluster_name
+  node_group_name    = var.node_group_name
+  kubernetes_version = var.kubernetes_version
+
+  karpenter_chart_version = var.karpenter_chart_version
 
   desired_size = var.desired_size
   min_size     = var.min_size

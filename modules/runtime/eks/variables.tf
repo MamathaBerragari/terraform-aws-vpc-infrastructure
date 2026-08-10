@@ -8,9 +8,6 @@ variable "region" {
   }
 }
 
-
-
-
 ###############################################################
 # Cluster Configuration
 ###############################################################
@@ -175,14 +172,29 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
 ###############################################################
 # Karpenter
 ###############################################################
 
-variable "karpenter_version" {
-  description = "Karpenter Helm Chart Version"
-  type        = string
-  default     = "1.3.3"
+variable "kubernetes_version" {
+  description = "Kubernetes version for the EKS cluster."
+
+  type = string
+
+  validation {
+    condition     = can(regex("^[0-9]+\\.[0-9]+$", var.kubernetes_version))
+    error_message = "kubernetes_version must be in the format major.minor, for example 1.31."
+  }
 }
 
+variable "karpenter_chart_version" {
+  description = "Karpenter Helm chart version."
 
+  type = string
+
+  validation {
+    condition     = length(trimspace(var.karpenter_chart_version)) > 0
+    error_message = "karpenter_chart_version must not be empty."
+  }
+}

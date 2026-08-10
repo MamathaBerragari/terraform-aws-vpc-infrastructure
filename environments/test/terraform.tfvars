@@ -2,6 +2,8 @@ aws_region = "ap-south-1"
 
 project_name = "terraform-project"
 
+karpenter_chart_version = "1.3.3"
+
 environment = "test"
 
 vpc_cidr = "10.10.0.0/16"
@@ -44,6 +46,8 @@ public_subnet_tags = {}
 private_subnet_tags = {}
 
 cluster_name = "test-eks"
+
+kubernetes_version = "1.31"
 
 node_group_name = "default"
 

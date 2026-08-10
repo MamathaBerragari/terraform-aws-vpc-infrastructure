@@ -64,9 +64,16 @@ module "ecr" {
 }
 
 module "eks" {
-  source          = "../../modules/runtime/eks"
-  region          = var.aws_region
-  cluster_name    = var.cluster_name
+  source       = "../../modules/runtime/eks"
+  region       = var.aws_region
+  cluster_name = var.cluster_name
+
+  kubernetes_version = var.kubernetes_version
+
+  cluster_version = var.kubernetes_version
+
+  karpenter_chart_version = var.karpenter_chart_version
+
   node_group_name = var.node_group_name
 
   desired_size = var.desired_size

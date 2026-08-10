@@ -218,3 +218,19 @@ variable "ecr_repository_write_principals" {
   type        = list(string)
   default     = []
 }
+
+variable "kubernetes_version" {
+  description = "Kubernetes version for the EKS cluster."
+
+  type = string
+
+  validation {
+    condition     = can(regex("^[0-9]+\\.[0-9]+$", var.kubernetes_version))
+    error_message = "kubernetes_version must be in the format major.minor, for example 1.31."
+  }
+}
+
+variable "karpenter_chart_version" {
+  description = "Karpenter Helm chart version"
+  type        = string
+}
