@@ -18,14 +18,14 @@ resource "aws_eks_node_group" "default" {
 
   scaling_config {
     desired_size = var.desired_size
-    min_size = var.min_size
-    max_size = var.max_size
+    min_size     = var.min_size
+    max_size     = var.max_size
   }
 
   launch_template {
 
     id      = aws_launch_template.nodes.id
-    version = "$Latest"
+    version = aws_launch_template.nodes.latest_version
 
   }
 

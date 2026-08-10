@@ -1,59 +1,155 @@
 variable "environment" {
+  description = "Deployment environment name"
   type        = string
-  description = "Deployment environment name, such as test or prod."
+
+  validation {
+    condition     = length(trimspace(var.environment)) > 0
+    error_message = "Environment must not be empty."
+  }
 }
 
-variable "aws_region" {
- type = string
-}
 
 variable "vpc_cidr" {
+  description = "VPC CIDR"
   type        = string
-  description = "VPC CIDR block."
-}
+  validation {
 
-variable "public_subnet_cidrs" {
-  type        = list(string)
-  description = "List of public subnet CIDR blocks."
-}
+    condition = can(cidrnetmask(var.vpc_cidr))
 
-variable "private_subnet_cidrs" {
-  type        = list(string)
-  description = "List of private subnet CIDR blocks."
+    error_message = "Invalid VPC CIDR."
+
+  }
 }
 
 variable "availability_zones" {
+
+  description = "Availability Zones"
+
   type = list(string)
+
+  validation {
+
+    condition = length(var.availability_zones) >= 2
+
+    error_message = "At least 2 availability zones are required."
+
+  }
+
+  validation {
+    condition     = length(var.availability_zones) == length(distinct(var.availability_zones))
+    error_message = "Availability zones must be unique."
+  }
+
 }
 
-variable "vpc_endpoints" {
-  description = "Map of Gateway or Interface VPC endpoints."
+variable "public_subnet_cidrs" {
+  description = "Public Subnet CIDRs"
+  type        = list(string)
 
-  type = map(object({
-    service_name        = string
-    vpc_endpoint_type   = optional(string, "Gateway")
-    private_dns_enabled = optional(bool)
-    subnet_ids          = optional(list(string), [])
-    security_group_ids  = optional(list(string), [])
-    route_table_ids     = optional(list(string), [])
-    policy              = optional(string)
-    tags                = optional(map(string), {})
-  }))
-
-  default = {}
+  validation {
+    condition     = length(var.public_subnet_cidrs) >= 2
+    error_message = "At least 2 public subnet CIDRs are required."
+  }
 
   validation {
     condition = alltrue([
-      for endpoint in values(var.vpc_endpoints) :
-      contains(
-        [
-          "Gateway",
-          "Interface"
-        ],
-        endpoint.vpc_endpoint_type
-      )
+      for cidr in var.public_subnet_cidrs : can(cidrnetmask(cidr))
     ])
-
-    error_message = "vpc_endpoint_type must be Gateway or Interface."
+    error_message = "All public subnet CIDRs must be valid."
   }
+}
+
+variable "private_subnet_cidrs" {
+  description = "Private Subnet CIDRs"
+  type        = list(string)
+
+  validation {
+    condition     = length(var.private_subnet_cidrs) >= 2
+    error_message = "At least 2 private subnet CIDRs are required."
+  }
+
+  validation {
+    condition = alltrue([
+      for cidr in var.private_subnet_cidrs : can(cidrnetmask(cidr))
+    ])
+    error_message = "All private subnet CIDRs must be valid."
+  }
+}
+
+variable "tags" {
+  description = "Common Tags"
+  type        = map(string)
+  default     = {}
+}
+
+variable "public_subnet_tags" {
+  description = "Additional tags for public subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "private_subnet_tags" {
+  description = "Additional tags for private subnets"
+  type        = map(string)
+  default     = {}
+
+}
+
+
+variable "project_name" {
+
+  description = "Project name"
+
+  type = string
+
+  validation {
+    condition     = length(trimspace(var.project_name)) > 0
+    error_message = "Project name must not be empty."
+  }
+
+}
+
+variable "enable_dns_hostnames" {
+
+  description = "Enable DNS hostnames"
+
+  type = bool
+
+}
+
+
+variable "enable_dns_support" {
+
+  description = "Enable DNS support"
+
+  type = bool
+
+}
+
+variable "instance_tenancy" {
+
+  description = "VPC tenancy"
+
+  type = string
+
+  validation {
+    condition     = contains(["default", "dedicated", "host"], var.instance_tenancy)
+    error_message = "Instance tenancy must be default, dedicated, or host."
+  }
+}
+
+variable "single_nat_gateway" {
+
+  description = "Create single NAT Gateway or one per AZ"
+
+  type = bool
+
+}
+
+variable "map_public_ip_on_launch" {
+
+  description = "Assign public IP on public subnet"
+
+  type = bool
+
 }

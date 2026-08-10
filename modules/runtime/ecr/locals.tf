@@ -1,6 +1,5 @@
 locals {
-
-  repository_name = lower(var.repository_name)
+  repository_name = lower(trimspace(var.repository_name))
 
   common_tags = merge(
     var.tags,
@@ -10,5 +9,4 @@ locals {
       Module    = "runtime-ecr"
     }
   )
-
 }

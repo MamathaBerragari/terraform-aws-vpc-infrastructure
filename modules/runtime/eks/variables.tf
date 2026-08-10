@@ -1,3 +1,16 @@
+variable "region" {
+  description = "AWS region for the EKS environment"
+  type        = string
+
+  validation {
+    condition     = length(trimspace(var.region)) > 0
+    error_message = "Region must not be empty."
+  }
+}
+
+
+
+
 ###############################################################
 # Cluster Configuration
 ###############################################################

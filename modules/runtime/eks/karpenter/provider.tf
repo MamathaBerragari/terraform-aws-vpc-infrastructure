@@ -16,7 +16,7 @@ provider "helm" {
         "--cluster-name",
         var.cluster_name,
         "--region",
-        "ap-south-1"
+        var.region
       ]
     }
   }

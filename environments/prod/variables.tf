@@ -2,6 +2,14 @@ variable "aws_region" {
   type = string
 }
 
+variable "interface_endpoints" {
+  type = list(string)
+}
+
+variable "gateway_endpoints" {
+  type = list(string)
+}
+
 variable "environment" {
   type = string
 }
@@ -42,4 +50,171 @@ variable "cluster_name" {
 
 variable "node_group_name" {
   type = string
+}
+
+variable "public_subnet_tags" {
+  type    = map(string)
+  default = {}
+}
+
+variable "private_subnet_tags" {
+  type    = map(string)
+  default = {}
+}
+
+variable "private_dns_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "endpoint_ingress_cidrs" {
+  type = list(string)
+}
+
+
+variable "project_name" {
+  type = string
+}
+
+variable "tags" {
+
+  description = "Common tags"
+
+  type = map(string)
+
+  default = {}
+
+}
+
+variable "single_nat_gateway" {
+  description = "Create a single NAT Gateway or one NAT Gateway per Availability Zone"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dns_hostnames" {
+  description = "Enable DNS hostnames for the VPC"
+  type        = bool
+}
+
+variable "enable_dns_support" {
+  description = "Enable DNS support for the VPC"
+  type        = bool
+}
+
+variable "instance_tenancy" {
+  description = "VPC instance tenancy"
+  type        = string
+
+  validation {
+    condition     = contains(["default", "dedicated", "host"], var.instance_tenancy)
+    error_message = "instance_tenancy must be default, dedicated, or host."
+  }
+}
+
+variable "map_public_ip_on_launch" {
+  description = "Whether public subnets assign public IP addresses"
+  type        = bool
+}
+
+variable "endpoint_egress_cidrs" {
+  description = "CIDRs allowed for VPC endpoint egress"
+  type        = list(string)
+
+  validation {
+    condition = alltrue([
+      for cidr in var.endpoint_egress_cidrs : can(cidrnetmask(cidr))
+    ])
+    error_message = "All endpoint egress CIDRs must be valid CIDRs."
+  }
+}
+
+variable "ecr_repository_name" {
+  description = "ECR repository name"
+  type        = string
+
+  validation {
+    condition     = can(regex("^[a-z0-9]+([._/-][a-z0-9]+)*$", trimspace(var.ecr_repository_name)))
+    error_message = "ECR repository name must contain only lowercase letters, numbers, '.', '_' or '/'."
+  }
+}
+
+variable "ecr_image_tag_mutability" {
+  description = "ECR image tag mutability"
+  type        = string
+
+  validation {
+    condition = contains(
+      ["MUTABLE", "IMMUTABLE"],
+      var.ecr_image_tag_mutability
+    )
+
+    error_message = "ECR image tag mutability must be MUTABLE or IMMUTABLE."
+  }
+}
+
+variable "ecr_scan_on_push" {
+  description = "Enable ECR image scanning on push"
+  type        = bool
+}
+
+variable "ecr_enhanced_scanning_enabled" {
+  description = "Enable Amazon Inspector enhanced ECR scanning."
+  type        = bool
+}
+
+variable "ecr_enhanced_scanning_type" {
+  description = "ECR enhanced scanning frequency."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["CONTINUOUS_SCAN", "SCAN_ON_PUSH"],
+      var.ecr_enhanced_scanning_type
+    )
+
+    error_message = "ECR enhanced scanning type must be CONTINUOUS_SCAN or SCAN_ON_PUSH."
+  }
+}
+
+variable "ecr_encryption_type" {
+  description = "ECR repository encryption type."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["AES256", "KMS"],
+      var.ecr_encryption_type
+    )
+
+    error_message = "ECR encryption type must be AES256 or KMS."
+  }
+}
+
+variable "ecr_kms_key_arn" {
+  description = "KMS key ARN used for ECR encryption when KMS encryption is enabled."
+  type        = string
+  default     = null
+}
+
+variable "ecr_lifecycle_max_image_count" {
+  description = "Maximum number of ECR images retained."
+  type        = number
+
+  validation {
+    condition     = var.ecr_lifecycle_max_image_count >= 1
+    error_message = "ECR lifecycle image count must be greater than zero."
+  }
+}
+
+variable "ecr_repository_read_principals" {
+  description = "IAM principals allowed to pull images from ECR."
+  type        = list(string)
+  default     = []
+}
+
+variable "ecr_repository_write_principals" {
+  description = "IAM principals allowed to push images to ECR."
+  type        = list(string)
+  default     = []
 }

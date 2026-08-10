@@ -4,16 +4,14 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = each.value.cidr
   availability_zone       = each.value.az
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = var.map_public_ip_on_launch
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.name_prefix}-public-subnet-${each.value.idx}"
-
-      "karpenter.sh/discovery" = "prod-eks"
-
-    }
+      Name = "${local.name_prefix}-public-subnet-${each.value.index}"
+    },
+    var.public_subnet_tags
   )
 }
 
@@ -27,9 +25,8 @@ resource "aws_subnet" "private" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.name_prefix}-private-subnet-${each.value.idx}"
-       
-      "karpenter.sh/discovery" = "${var.environment}-eks"
-    }
+      Name = "${local.name_prefix}-private-subnet-${each.value.index}"
+    },
+    var.private_subnet_tags
   )
 }

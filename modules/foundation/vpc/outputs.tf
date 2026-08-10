@@ -43,20 +43,7 @@ output "nat_gateway_ips" {
   description = "Public IP addresses of the NAT Gateways."
 }
 
-output "vpc_endpoint_ids" {
-  description = "Map of VPC endpoint names to endpoint IDs."
-
-  value = {
-    for name, endpoint in aws_vpc_endpoint.this :
-    name => endpoint.id
-  }
-}
-
-output "vpc_endpoint_arns" {
-  description = "Map of VPC endpoint names to endpoint ARNs."
-
-  value = {
-    for name, endpoint in aws_vpc_endpoint.this :
-    name => endpoint.arn
-  }
+output "availability_zones" {
+  value       = var.availability_zones
+  description = "Availability zones used"
 }

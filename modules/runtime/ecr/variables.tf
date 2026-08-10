@@ -1,80 +1,110 @@
 variable "repository_name" {
-
   description = "Name of the ECR repository."
+  type        = string
 
-  type = string
-
+  validation {
+    condition     = can(regex("^[a-z0-9]+([._/-][a-z0-9]+)*$", trimspace(var.repository_name)))
+    error_message = "repository_name must contain only lowercase letters, numbers, '.', '_' or '/'."
+  }
 }
 
 variable "image_tag_mutability" {
-
-  description = "Whether image tags are mutable."
-
-  type = string
-
-  default = "IMMUTABLE"
+  description = "Whether ECR image tags are mutable or immutable."
+  type        = string
+  default     = "IMMUTABLE"
 
   validation {
-
     condition = contains(
       ["MUTABLE", "IMMUTABLE"],
       var.image_tag_mutability
     )
 
-    error_message = "Must be MUTABLE or IMMUTABLE."
-
+    error_message = "image_tag_mutability must be either MUTABLE or IMMUTABLE."
   }
-
 }
 
 variable "scan_on_push" {
-
-  description = "Enable image scan on push."
-
-  type = bool
-
-  default = true
-
+  description = "Enable basic ECR image scanning when images are pushed."
+  type        = bool
+  default     = true
 }
 
+variable "enhanced_scanning_enabled" {
+  description = "Enable Amazon Inspector enhanced scanning for the repository."
+  type        = bool
+  default     = false
+}
 
+variable "enhanced_scanning_type" {
+  description = "Enhanced ECR scanning type."
+  type        = string
+  default     = "CONTINUOUS_SCAN"
+
+  validation {
+    condition = contains(
+      ["CONTINUOUS_SCAN", "SCAN_ON_PUSH"],
+      var.enhanced_scanning_type
+    )
+
+    error_message = "enhanced_scanning_type must be CONTINUOUS_SCAN or SCAN_ON_PUSH."
+  }
+}
 
 variable "lifecycle_max_image_count" {
+  description = "Maximum number of images retained in the repository."
+  type        = number
+  default     = 20
 
-  description = "Maximum images to retain."
-
-  type = number
-
-  default = 20
-
+  validation {
+    condition     = var.lifecycle_max_image_count >= 1
+    error_message = "lifecycle_max_image_count must be greater than or equal to 1."
+  }
 }
 
 variable "repository_read_principals" {
-
-  description = "IAM principals allowed read access."
-
-  type = list(string)
-
-  default = []
-
+  description = "IAM principals allowed to pull images from the repository."
+  type        = list(string)
+  default     = []
 }
 
 variable "repository_write_principals" {
+  description = "IAM principals allowed to push images to the repository."
+  type        = list(string)
+  default     = []
+}
 
-  description = "IAM principals allowed push access."
+variable "encryption_type" {
+  description = "ECR repository encryption type."
+  type        = string
+  default     = "AES256"
 
-  type = list(string)
+  validation {
+    condition = contains(
+      ["AES256", "KMS"],
+      var.encryption_type
+    )
 
-  default = []
+    error_message = "encryption_type must be AES256 or KMS."
+  }
+}
 
+variable "kms_key_arn" {
+  description = "ARN of the KMS key used for ECR encryption when encryption_type is KMS."
+  type        = string
+  default     = null
+
+  validation {
+    condition = (
+      var.kms_key_arn == null ||
+      can(regex("^arn:[^:]+:kms:[^:]+:[0-9]{12}:key/.+$", var.kms_key_arn))
+    )
+
+    error_message = "kms_key_arn must be a valid KMS key ARN or null."
+  }
 }
 
 variable "tags" {
-
-  description = "Common resource tags."
-
-  type = map(string)
-
-  default = {}
-
+  description = "Common tags applied to ECR resources."
+  type        = map(string)
+  default     = {}
 }

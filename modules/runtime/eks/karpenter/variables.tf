@@ -1,3 +1,8 @@
+variable "region" {
+  description = "AWS region for Karpenter"
+  type        = string
+}
+
 variable "cluster_name" {
   description = "EKS Cluster Name"
   type        = string

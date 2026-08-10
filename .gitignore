@@ -1,17 +1,24 @@
-**/.terraform/*
+# Terraform working directory
+.terraform/
+
+# Terraform state
 *.tfstate
 *.tfstate.*
-*.tfplan
-crash.log
-crash.*.log
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-.terraformrc
-terraform.rc
 
 # Terraform plan files
-tfplan
-**/tfplan
 *.tfplan
+*.plan
+*-plan
+*-plan.txt
+
+# Terraform state backups
+*-state-backup-*.json
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Terraform plan output reports
+test-plan*.txt
+prod-plan*.txt
+*-plan-*.txt

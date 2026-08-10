@@ -1,6 +1,8 @@
 module "karpenter" {
 
-source = "./karpenter"
+  source = "./karpenter"
+
+  region = var.region
 
   cluster_name = var.cluster_name
 
