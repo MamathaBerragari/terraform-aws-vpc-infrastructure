@@ -348,3 +348,32 @@ variable "ecr_force_delete" {
   description = "Whether the ECR repository can be force deleted."
   type        = bool
 }
+
+variable "eks_ip_family" {
+  description = "IP address family used by the EKS cluster."
+  type        = string
+
+  validation {
+    condition     = contains(["ipv4", "ipv6"], var.eks_ip_family)
+    error_message = "eks_ip_family must be either ipv4 or ipv6."
+  }
+}
+
+variable "eks_authentication_mode" {
+  description = "EKS authentication mode."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["CONFIG_MAP", "API", "API_AND_CONFIG_MAP"],
+      var.eks_authentication_mode
+    )
+
+    error_message = "eks_authentication_mode must be CONFIG_MAP, API, or API_AND_CONFIG_MAP."
+  }
+}
+
+variable "eks_bootstrap_cluster_creator_admin_permissions" {
+  description = "Whether the cluster creator receives bootstrap administrator permissions."
+  type        = bool
+}

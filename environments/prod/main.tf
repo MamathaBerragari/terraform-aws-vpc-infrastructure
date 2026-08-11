@@ -83,6 +83,12 @@ module "eks" {
   region       = var.aws_region
   cluster_name = var.cluster_name
 
+  ip_family = var.eks_ip_family
+
+  authentication_mode = var.eks_authentication_mode
+
+  bootstrap_cluster_creator_admin_permissions = var.eks_bootstrap_cluster_creator_admin_permissions
+
   kubernetes_version = var.kubernetes_version
   cluster_version    = var.kubernetes_version
 

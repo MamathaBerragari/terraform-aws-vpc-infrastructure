@@ -23,6 +23,35 @@ variable "cluster_version" {
   default     = "1.31"
 }
 
+variable "ip_family" {
+  description = "IP address family used by the EKS cluster."
+  type        = string
+
+  validation {
+    condition     = contains(["ipv4", "ipv6"], var.ip_family)
+    error_message = "ip_family must be either ipv4 or ipv6."
+  }
+}
+
+variable "authentication_mode" {
+  description = "EKS authentication mode."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["CONFIG_MAP", "API", "API_AND_CONFIG_MAP"],
+      var.authentication_mode
+    )
+
+    error_message = "authentication_mode must be CONFIG_MAP, API, or API_AND_CONFIG_MAP."
+  }
+}
+
+variable "bootstrap_cluster_creator_admin_permissions" {
+  description = "Whether the cluster creator receives bootstrap administrator permissions."
+  type        = bool
+}
+
 ###############################################################
 # Networking
 ###############################################################

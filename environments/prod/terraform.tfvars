@@ -113,6 +113,13 @@ cluster_name = "prod-eks"
 
 kubernetes_version = "1.31"
 
+eks_ip_family = "ipv4"
+
+eks_authentication_mode = "API_AND_CONFIG_MAP"
+
+eks_bootstrap_cluster_creator_admin_permissions = true
+
+
 node_group_name = "default"
 
 desired_size = 3
