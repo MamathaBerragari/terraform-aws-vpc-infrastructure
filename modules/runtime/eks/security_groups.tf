@@ -1,3 +1,7 @@
+############################################################
+# EKS Cluster Security Group
+############################################################
+
 resource "aws_security_group" "cluster" {
 
   name        = "${var.cluster_name}-cluster-sg"
@@ -12,6 +16,10 @@ resource "aws_security_group" "cluster" {
   )
 }
 
+############################################################
+# Cluster Egress
+############################################################
+
 resource "aws_security_group_rule" "cluster_egress" {
 
   type              = "egress"
@@ -20,8 +28,11 @@ resource "aws_security_group_rule" "cluster_egress" {
   protocol          = "-1"
   security_group_id = aws_security_group.cluster.id
   cidr_blocks       = ["0.0.0.0/0"]
-
 }
+
+############################################################
+# EKS Worker Node Security Group
+############################################################
 
 resource "aws_security_group" "nodes" {
 
@@ -32,12 +43,15 @@ resource "aws_security_group" "nodes" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.cluster_name}-nodes-sg"
-
+      Name                     = "${var.cluster_name}-nodes-sg"
       "karpenter.sh/discovery" = var.cluster_name
     }
   )
 }
+
+############################################################
+# Worker Nodes → EKS Control Plane
+############################################################
 
 resource "aws_security_group_rule" "nodes_to_cluster" {
 
@@ -47,29 +61,43 @@ resource "aws_security_group_rule" "nodes_to_cluster" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.cluster.id
   source_security_group_id = aws_security_group.nodes.id
-
 }
 
+############################################################
+# EKS Control Plane → Worker Nodes
+############################################################
+
 resource "aws_security_group_rule" "cluster_to_nodes" {
+
   type                     = "ingress"
   from_port                = 10250
   to_port                  = 10250
   protocol                 = "tcp"
   security_group_id        = aws_security_group.nodes.id
   source_security_group_id = aws_security_group.cluster.id
-  description              = "Allow EKS control plane to communicate with kubelet"
+
+  description = "Allow EKS control plane to communicate with kubelet"
 }
 
+############################################################
+# Worker Nodes → Worker Nodes
+############################################################
+
 resource "aws_security_group_rule" "nodes_to_nodes" {
+
   type                     = "ingress"
   from_port                = 0
   to_port                  = 0
   protocol                 = "-1"
   security_group_id        = aws_security_group.nodes.id
   source_security_group_id = aws_security_group.nodes.id
-  description              = "Allow worker nodes to communicate with each other"
+
+  description = "Allow worker nodes to communicate with each other"
 }
 
+############################################################
+# Worker Node Egress
+############################################################
 
 resource "aws_security_group_rule" "nodes_egress" {
 
@@ -79,5 +107,4 @@ resource "aws_security_group_rule" "nodes_egress" {
   protocol          = "-1"
   security_group_id = aws_security_group.nodes.id
   cidr_blocks       = ["0.0.0.0/0"]
-
 }

@@ -13,7 +13,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   statistic           = var.cpu_alarm_statistic
   threshold           = var.cpu_alarm_threshold
 
-  alarm_description = var.cpu_alarm_description
+  alarm_description  = var.cpu_alarm_description
   treat_missing_data = var.cpu_alarm_treat_missing_data
 }
 
@@ -22,7 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 ############################################################
 
 resource "aws_cloudwatch_log_group" "eks" {
-  name = "${var.eks_log_group_name_prefix}${var.cluster_name}${var.eks_log_group_name_suffix}"
+  name              = "${var.eks_log_group_name_prefix}${var.cluster_name}${var.eks_log_group_name_suffix}"
   retention_in_days = var.eks_log_retention_in_days
 
   tags = local.common_tags
