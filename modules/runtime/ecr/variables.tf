@@ -1,24 +1,23 @@
+############################################################
+# ECR Repository
+############################################################
+
 variable "repository_name" {
   description = "Name of the ECR repository."
   type        = string
 
   validation {
-    condition     = can(regex("^[a-z0-9]+([._/-][a-z0-9]+)*$", trimspace(var.repository_name)))
-    error_message = "repository_name must contain only lowercase letters, numbers, '.', '_' or '/'."
+    condition     = can(regex("^[a-z0-9]+([._*/-][a-z0-9]+)*$", trimspace(var.repository_name)))
+    error_message = "repository_name must contain only lowercase letters, numbers, '.', '_', '*', '/', or '-'."
   }
 }
 
 variable "image_tag_mutability" {
   description = "Whether ECR image tags are mutable or immutable."
   type        = string
-  default     = "IMMUTABLE"
 
   validation {
-    condition = contains(
-      ["MUTABLE", "IMMUTABLE"],
-      var.image_tag_mutability
-    )
-
+    condition     = contains(["MUTABLE", "IMMUTABLE"], var.image_tag_mutability)
     error_message = "image_tag_mutability must be either MUTABLE or IMMUTABLE."
   }
 }
@@ -26,19 +25,16 @@ variable "image_tag_mutability" {
 variable "scan_on_push" {
   description = "Enable basic ECR image scanning when images are pushed."
   type        = bool
-  default     = true
 }
 
 variable "enhanced_scanning_enabled" {
-  description = "Enable Amazon Inspector enhanced scanning for the repository."
+  description = "Enable Amazon Inspector enhanced scanning."
   type        = bool
-  default     = false
 }
 
 variable "enhanced_scanning_type" {
-  description = "Enhanced ECR scanning type."
+  description = "Enhanced ECR scanning frequency."
   type        = string
-  default     = "CONTINUOUS_SCAN"
 
   validation {
     condition = contains(
@@ -53,19 +49,16 @@ variable "enhanced_scanning_type" {
 variable "repository_read_principals" {
   description = "IAM principals allowed to pull images from the repository."
   type        = list(string)
-  default     = []
 }
 
 variable "repository_write_principals" {
   description = "IAM principals allowed to push images to the repository."
   type        = list(string)
-  default     = []
 }
 
 variable "encryption_type" {
   description = "ECR repository encryption type."
   type        = string
-  default     = "AES256"
 
   validation {
     condition = contains(
@@ -78,9 +71,9 @@ variable "encryption_type" {
 }
 
 variable "kms_key_arn" {
-  description = "ARN of the KMS key used for ECR encryption when encryption_type is KMS."
+  description = "KMS key ARN used when ECR encryption type is KMS."
   type        = string
-  default     = null
+  nullable    = true
 
   validation {
     condition = (
@@ -92,15 +85,18 @@ variable "kms_key_arn" {
   }
 }
 
-variable "tags" {
-  description = "Common tags applied to ECR resources."
-  type        = map(string)
-  default     = {}
-}
+############################################################
+# ECR Lifecycle Configuration
+############################################################
 
 variable "lifecycle_rule_priority" {
   description = "Priority of the ECR lifecycle rule."
   type        = number
+
+  validation {
+    condition     = var.lifecycle_rule_priority >= 1
+    error_message = "lifecycle_rule_priority must be greater than or equal to 1."
+  }
 }
 
 variable "lifecycle_description" {
@@ -109,23 +105,35 @@ variable "lifecycle_description" {
 }
 
 variable "lifecycle_tag_status" {
-  description = "Tag status selection for the ECR lifecycle rule."
+  description = "Tag status used by the ECR lifecycle rule."
   type        = string
+
+  validation {
+    condition = contains(
+      ["tagged", "untagged", "any"],
+      var.lifecycle_tag_status
+    )
+
+    error_message = "lifecycle_tag_status must be tagged, untagged, or any."
+  }
 }
 
 variable "lifecycle_count_type" {
   description = "Count type used by the ECR lifecycle rule."
   type        = string
-}
 
+  validation {
+    condition = contains(
+      ["imageCountMoreThan", "sinceImagePushed"],
+      var.lifecycle_count_type
+    )
 
-variable "lifecycle_action_type" {
-  description = "Action performed by the ECR lifecycle rule."
-  type        = string
+    error_message = "lifecycle_count_type must be imageCountMoreThan or sinceImagePushed."
+  }
 }
 
 variable "lifecycle_max_image_count" {
-  description = "Maximum number of images retained in the repository."
+  description = "Maximum number of images retained by the lifecycle rule."
   type        = number
 
   validation {
@@ -134,6 +142,19 @@ variable "lifecycle_max_image_count" {
   }
 }
 
+variable "lifecycle_action_type" {
+  description = "Action performed by the ECR lifecycle rule."
+  type        = string
+
+  validation {
+    condition     = var.lifecycle_action_type == "expire"
+    error_message = "lifecycle_action_type must be expire."
+  }
+}
+
+############################################################
+# Resource Tag Configuration
+############################################################
 
 variable "managed_by" {
   description = "Value used for the ManagedBy resource tag."
@@ -145,17 +166,45 @@ variable "module_name" {
   type        = string
 }
 
+############################################################
+# Repository Deletion Configuration
+############################################################
+
 variable "force_delete" {
   description = "Whether Terraform is allowed to delete the ECR repository when it contains images."
   type        = bool
 }
 
+############################################################
+# Enhanced Scanning Configuration
+############################################################
+
 variable "enhanced_scanning_scan_type" {
   description = "ECR registry scanning type."
   type        = string
+
+  validation {
+    condition     = var.enhanced_scanning_scan_type == "ENHANCED"
+    error_message = "enhanced_scanning_scan_type must be ENHANCED."
+  }
 }
 
 variable "enhanced_scanning_filter_type" {
   description = "ECR repository filter type used for enhanced scanning."
   type        = string
+
+  validation {
+    condition     = var.enhanced_scanning_filter_type == "WILDCARD"
+    error_message = "enhanced_scanning_filter_type must be WILDCARD."
+  }
 }
+
+############################################################
+# Common Tags
+############################################################
+
+variable "tags" {
+  description = "Common tags applied to ECR resources."
+  type        = map(string)
+}
+
