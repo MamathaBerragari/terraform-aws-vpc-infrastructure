@@ -5,8 +5,8 @@ locals {
     var.tags,
     {
       Name      = local.repository_name
-      ManagedBy = "Terraform"
-      Module    = "runtime-ecr"
+      ManagedBy = var.managed_by
+      Module    = var.module_name
     }
   )
 }

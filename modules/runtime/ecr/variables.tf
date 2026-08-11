@@ -133,3 +133,14 @@ variable "lifecycle_max_image_count" {
     error_message = "lifecycle_max_image_count must be greater than or equal to 1."
   }
 }
+
+
+variable "managed_by" {
+  description = "Value used for the ManagedBy resource tag."
+  type        = string
+}
+
+variable "module_name" {
+  description = "Value used for the Module resource tag."
+  type        = string
+}

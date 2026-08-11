@@ -323,3 +323,13 @@ variable "ecr_lifecycle_action_type" {
     error_message = "ECR lifecycle action type must be expire."
   }
 }
+
+variable "ecr_managed_by" {
+  description = "Value used for the ECR ManagedBy tag."
+  type        = string
+}
+
+variable "ecr_module_name" {
+  description = "Value used for the ECR Module tag."
+  type        = string
+}

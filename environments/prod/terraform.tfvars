@@ -97,6 +97,9 @@ ecr_lifecycle_max_image_count = 20
 
 ecr_lifecycle_action_type = "expire"
 
+ecr_managed_by  = "Terraform"
+ecr_module_name = "runtime-ecr"
+
 
 ############################################################
 # EKS

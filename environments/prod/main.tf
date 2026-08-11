@@ -66,6 +66,9 @@ module "ecr" {
   lifecycle_max_image_count = var.ecr_lifecycle_max_image_count
   lifecycle_action_type     = var.ecr_lifecycle_action_type
 
+  managed_by  = var.ecr_managed_by
+  module_name = var.ecr_module_name
+
   tags = local.common_tags
 }
 
