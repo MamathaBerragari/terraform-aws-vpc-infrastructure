@@ -785,3 +785,67 @@ variable "enabled_cluster_log_types" {
     error_message = "enabled_cluster_log_types contains an unsupported EKS control plane log type."
   }
 }
+
+variable "karpenter_node_class_name" {
+  description = "Name of the Karpenter EC2NodeClass."
+  type        = string
+}
+
+variable "karpenter_ami_family" {
+  description = "AMI family used by Karpenter."
+  type        = string
+}
+
+variable "karpenter_ami_selector_alias" {
+  description = "AMI selector alias used by Karpenter."
+  type        = string
+}
+
+variable "karpenter_node_name_prefix" {
+  description = "Name prefix for Karpenter-provisioned nodes."
+  type        = string
+}
+
+variable "karpenter_discovery_tag_key" {
+  description = "Tag key used by Karpenter to discover AWS resources."
+  type        = string
+}
+
+variable "karpenter_node_pool_name" {
+  description = "Name of the Karpenter NodePool."
+  type        = string
+}
+
+variable "karpenter_node_pool_architecture" {
+  description = "CPU architecture allowed for Karpenter nodes."
+  type        = string
+}
+
+variable "karpenter_node_pool_operating_system" {
+  description = "Operating system allowed for Karpenter nodes."
+  type        = string
+}
+
+variable "karpenter_node_pool_capacity_types" {
+  description = "Capacity types allowed for Karpenter nodes."
+  type        = list(string)
+}
+
+variable "karpenter_consolidation_policy" {
+  description = "Karpenter NodePool consolidation policy."
+  type        = string
+}
+
+variable "karpenter_consolidate_after" {
+  description = "How long Karpenter waits before consolidation."
+  type        = string
+}
+
+############################################################
+# Karpenter
+############################################################
+
+variable "enable_karpenter" {
+  description = "Whether Karpenter is enabled for the EKS cluster."
+  type        = bool
+}

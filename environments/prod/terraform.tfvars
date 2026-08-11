@@ -289,3 +289,34 @@ eks_log_retention_in_days = 30
 ############################################################
 
 karpenter_chart_version = "1.3.3"
+
+karpenter_node_class_name = "default"
+
+karpenter_ami_family = "AL2023"
+
+karpenter_ami_selector_alias = "al2023@latest"
+
+karpenter_node_name_prefix = "karpenter-node"
+
+karpenter_discovery_tag_key = "karpenter.sh/discovery"
+
+karpenter_node_pool_name = "default"
+
+karpenter_node_pool_architecture = "amd64"
+
+karpenter_node_pool_operating_system = "linux"
+
+karpenter_node_pool_capacity_types = [
+  "on-demand",
+  "spot"
+]
+
+karpenter_consolidation_policy = "WhenEmpty"
+
+karpenter_consolidate_after = "30s"
+
+############################################################
+# Karpenter
+############################################################
+
+enable_karpenter = true

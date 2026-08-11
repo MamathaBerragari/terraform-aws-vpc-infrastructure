@@ -82,3 +82,25 @@ ecr_lifecycle_max_image_count = 20
 
 ecr_repository_read_principals  = []
 ecr_repository_write_principals = []
+
+ecr_force_delete = false
+
+ecr_enhanced_scanning_enabled = true
+ecr_enhanced_scanning_type    = "CONTINUOUS_SCAN"
+
+ecr_encryption_type = "AES256"
+ecr_kms_key_arn     = null
+
+ecr_lifecycle_rule_priority = 1
+ecr_lifecycle_description   = "Expire old images"
+ecr_lifecycle_tag_status    = "any"
+ecr_lifecycle_count_type    = "imageCountMoreThan"
+ecr_lifecycle_action_type   = "expire"
+
+ecr_managed_by  = "Terraform"
+ecr_module_name = "runtime-ecr"
+
+ecr_enhanced_scanning_scan_type   = "ENHANCED"
+ecr_enhanced_scanning_filter_type = "WILDCARD"
+
+enable_karpenter = false

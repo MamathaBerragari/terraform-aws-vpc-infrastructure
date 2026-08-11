@@ -3,40 +3,36 @@ resource "kubectl_manifest" "node_pool" {
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
-  name: default
+  name: ${var.node_pool_name}
 spec:
-
   template:
     spec:
-
       nodeClassRef:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
-        name: default
+        name: ${var.node_class_name}
 
       requirements:
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+            - ${var.node_pool_architecture}
 
-      - key: kubernetes.io/arch
-        operator: In
-        values:
-          - amd64
+        - key: kubernetes.io/os
+          operator: In
+          values:
+            - ${var.node_pool_operating_system}
 
-      - key: kubernetes.io/os
-        operator: In
-        values:
-          - linux
-
-      - key: karpenter.sh/capacity-type
-        operator: In
-        values:
-          - on-demand
-          - spot
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values:
+%{for capacity_type in var.node_pool_capacity_types~}
+            - ${capacity_type}
+%{endfor~}
 
   disruption:
-
-    consolidationPolicy: WhenEmpty
-
-    consolidateAfter: 30s
+    consolidationPolicy: ${var.consolidation_policy}
+    consolidateAfter: ${var.consolidate_after}
 YAML
 
   depends_on = [

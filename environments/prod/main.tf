@@ -78,9 +78,9 @@ module "ecr" {
 }
 
 module "eks" {
-  source    = "../../modules/runtime/eks"
-  disk_size = var.eks_disk_size
-
+  source           = "../../modules/runtime/eks"
+  disk_size        = var.eks_disk_size
+  enable_karpenter = true
   # ----------------------------------------------------------
   # Basic EKS Configuration
   # ----------------------------------------------------------
@@ -258,4 +258,41 @@ module "eks" {
   # ----------------------------------------------------------
 
   tags = local.common_tags
+
+
+  # ----------------------------------------------------------
+  # Karpenter
+  # ----------------------------------------------------------
+
+  karpenter_node_class_name = var.karpenter_node_class_name
+
+  karpenter_ami_family = var.karpenter_ami_family
+
+  karpenter_ami_selector_alias = var.karpenter_ami_selector_alias
+
+  karpenter_node_name_prefix = var.karpenter_node_name_prefix
+
+  karpenter_discovery_tag_key = var.karpenter_discovery_tag_key
+
+  karpenter_node_pool_name = var.karpenter_node_pool_name
+
+  karpenter_node_pool_architecture = var.karpenter_node_pool_architecture
+
+  karpenter_node_pool_operating_system = var.karpenter_node_pool_operating_system
+
+  karpenter_node_pool_capacity_types = var.karpenter_node_pool_capacity_types
+
+  karpenter_consolidation_policy = var.karpenter_consolidation_policy
+
+  karpenter_consolidate_after = var.karpenter_consolidate_after
+
+}
+
+############################################################
+# Terraform State Address Migration - Karpenter
+############################################################
+
+moved {
+  from = module.eks.module.karpenter
+  to   = module.eks.module.karpenter[0]
 }
