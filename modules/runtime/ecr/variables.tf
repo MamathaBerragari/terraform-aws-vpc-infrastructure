@@ -144,3 +144,18 @@ variable "module_name" {
   description = "Value used for the Module resource tag."
   type        = string
 }
+
+variable "force_delete" {
+  description = "Whether Terraform is allowed to delete the ECR repository when it contains images."
+  type        = bool
+}
+
+variable "enhanced_scanning_scan_type" {
+  description = "ECR registry scanning type."
+  type        = string
+}
+
+variable "enhanced_scanning_filter_type" {
+  description = "ECR repository filter type used for enhanced scanning."
+  type        = string
+}

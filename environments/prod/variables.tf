@@ -333,3 +333,18 @@ variable "ecr_module_name" {
   description = "Value used for the ECR Module tag."
   type        = string
 }
+
+variable "ecr_enhanced_scanning_scan_type" {
+  description = "ECR registry scanning type."
+  type        = string
+}
+
+variable "ecr_enhanced_scanning_filter_type" {
+  description = "ECR repository filter type for enhanced scanning."
+  type        = string
+}
+
+variable "ecr_force_delete" {
+  description = "Whether the ECR repository can be force deleted."
+  type        = bool
+}

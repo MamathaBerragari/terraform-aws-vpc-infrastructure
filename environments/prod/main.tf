@@ -69,6 +69,11 @@ module "ecr" {
   managed_by  = var.ecr_managed_by
   module_name = var.ecr_module_name
 
+  force_delete = var.ecr_force_delete
+
+  enhanced_scanning_scan_type   = var.ecr_enhanced_scanning_scan_type
+  enhanced_scanning_filter_type = var.ecr_enhanced_scanning_filter_type
+
   tags = local.common_tags
 }
 

@@ -74,6 +74,8 @@ ecr_repository_name      = "my-application"
 ecr_image_tag_mutability = "IMMUTABLE"
 ecr_scan_on_push         = true
 
+ecr_force_delete = false
+
 ecr_enhanced_scanning_enabled = true
 ecr_enhanced_scanning_type    = "CONTINUOUS_SCAN"
 
@@ -100,6 +102,8 @@ ecr_lifecycle_action_type = "expire"
 ecr_managed_by  = "Terraform"
 ecr_module_name = "runtime-ecr"
 
+ecr_enhanced_scanning_scan_type   = "ENHANCED"
+ecr_enhanced_scanning_filter_type = "WILDCARD"
 
 ############################################################
 # EKS
