@@ -89,6 +89,23 @@ module "eks" {
 
   bootstrap_cluster_creator_admin_permissions = var.eks_bootstrap_cluster_creator_admin_permissions
 
+  cluster_assume_role_actions               = var.eks_cluster_assume_role_actions
+  cluster_assume_role_principal_type        = var.eks_cluster_assume_role_principal_type
+  cluster_assume_role_principal_identifiers = var.eks_cluster_assume_role_principal_identifiers
+
+  node_assume_role_actions               = var.eks_node_assume_role_actions
+  node_assume_role_principal_type        = var.eks_node_assume_role_principal_type
+  node_assume_role_principal_identifiers = var.eks_node_assume_role_principal_identifiers
+
+  cluster_role_name_suffix = var.eks_cluster_role_name_suffix
+  node_role_name_suffix    = var.eks_node_role_name_suffix
+
+  cluster_policy_arn     = var.eks_cluster_policy_arn
+  worker_node_policy_arn = var.eks_worker_node_policy_arn
+  cni_policy_arn         = var.eks_cni_policy_arn
+  ecr_read_policy_arn    = var.eks_ecr_read_policy_arn
+
+
   kubernetes_version = var.kubernetes_version
   cluster_version    = var.kubernetes_version
 

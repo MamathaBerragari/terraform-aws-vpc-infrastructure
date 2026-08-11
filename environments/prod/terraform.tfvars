@@ -126,6 +126,50 @@ desired_size = 3
 min_size     = 2
 max_size     = 5
 
+############################################################
+# EKS IAM Configuration
+############################################################
+
+eks_cluster_assume_role_actions = [
+  "sts:AssumeRole"
+]
+
+eks_cluster_assume_role_principal_type = "Service"
+
+eks_cluster_assume_role_principal_identifiers = [
+  "eks.amazonaws.com"
+]
+
+eks_node_assume_role_actions = [
+  "sts:AssumeRole"
+]
+
+eks_node_assume_role_principal_type = "Service"
+
+eks_node_assume_role_principal_identifiers = [
+  "ec2.amazonaws.com"
+]
+
+############################################################
+# EKS IAM Role Names
+############################################################
+
+eks_cluster_role_name_suffix = "cluster-role"
+
+eks_node_role_name_suffix = "node-role"
+
+############################################################
+# EKS Managed IAM Policies
+############################################################
+
+eks_cluster_policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+
+eks_worker_node_policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+
+eks_cni_policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+
+eks_ecr_read_policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+
 
 ############################################################
 # EKS ADD-ONS

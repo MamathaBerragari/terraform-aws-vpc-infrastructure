@@ -1,242 +1,230 @@
+############################################################
+# General / Environment
+############################################################
+
 variable "aws_region" {
-  type = string
-}
-
-variable "interface_endpoints" {
-  type = list(string)
-}
-
-variable "gateway_endpoints" {
-  type = list(string)
+  description = "AWS region for the environment."
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Environment name."
+  type        = string
 }
-
-variable "vpc_cidr" {
-  type = string
-}
-
-variable "public_subnet_cidrs" {
-  type = list(string)
-}
-
-variable "private_subnet_cidrs" {
-  type = list(string)
-}
-
-variable "desired_size" {
-  type = number
-}
-
-variable "min_size" {
-  type = number
-}
-
-variable "max_size" {
-  type = number
-}
-
-variable "availability_zones" {
-  type = list(string)
-}
-
-
-variable "cluster_name" {
-  type = string
-}
-
-
-variable "node_group_name" {
-  type = string
-}
-
-variable "public_subnet_tags" {
-  type    = map(string)
-  default = {}
-}
-
-variable "private_subnet_tags" {
-  type    = map(string)
-  default = {}
-}
-
-variable "private_dns_enabled" {
-  type    = bool
-  default = true
-}
-
-variable "endpoint_ingress_cidrs" {
-  type = list(string)
-}
-
 
 variable "project_name" {
-  type = string
+  description = "Project name."
+  type        = string
 }
 
 variable "tags" {
+  description = "Common tags applied to resources."
+  type        = map(string)
+  default     = {}
+}
 
-  description = "Common tags"
 
-  type = map(string)
+############################################################
+# VPC
+############################################################
 
-  default = {}
+variable "vpc_cidr" {
+  description = "CIDR block for the VPC."
+  type        = string
+}
 
+variable "availability_zones" {
+  description = "Availability Zones used by the environment."
+  type        = list(string)
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets."
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets."
+  type        = list(string)
+}
+
+variable "public_subnet_tags" {
+  description = "Tags applied to public subnets."
+  type        = map(string)
+  default     = {}
+}
+
+variable "private_subnet_tags" {
+  description = "Tags applied to private subnets."
+  type        = map(string)
+  default     = {}
 }
 
 variable "single_nat_gateway" {
-  description = "Create a single NAT Gateway or one NAT Gateway per Availability Zone"
+  description = "Whether to create a single NAT Gateway instead of one per Availability Zone."
   type        = bool
   default     = false
 }
 
 variable "enable_dns_hostnames" {
-  description = "Enable DNS hostnames for the VPC"
+  description = "Whether DNS hostnames are enabled for the VPC."
   type        = bool
 }
 
 variable "enable_dns_support" {
-  description = "Enable DNS support for the VPC"
+  description = "Whether DNS support is enabled for the VPC."
   type        = bool
 }
 
 variable "instance_tenancy" {
-  description = "VPC instance tenancy"
+  description = "VPC instance tenancy."
   type        = string
 
   validation {
-    condition     = contains(["default", "dedicated", "host"], var.instance_tenancy)
+    condition = contains(
+      ["default", "dedicated", "host"],
+      var.instance_tenancy
+    )
+
     error_message = "instance_tenancy must be default, dedicated, or host."
   }
 }
 
 variable "map_public_ip_on_launch" {
-  description = "Whether public subnets assign public IP addresses"
+  description = "Whether public subnets assign public IP addresses on launch."
   type        = bool
 }
 
+
+############################################################
+# VPC Endpoints
+############################################################
+
+variable "interface_endpoints" {
+  description = "AWS services configured as interface VPC endpoints."
+  type        = list(string)
+}
+
+variable "gateway_endpoints" {
+  description = "AWS services configured as gateway VPC endpoints."
+  type        = list(string)
+}
+
+variable "private_dns_enabled" {
+  description = "Whether private DNS is enabled for interface endpoints."
+  type        = bool
+  default     = true
+}
+
+variable "endpoint_ingress_cidrs" {
+  description = "CIDR blocks allowed to access VPC endpoint security groups."
+  type        = list(string)
+
+  validation {
+    condition = alltrue([
+      for cidr in var.endpoint_ingress_cidrs : can(cidrnetmask(cidr))
+    ])
+
+    error_message = "All endpoint ingress CIDRs must be valid CIDRs."
+  }
+}
+
 variable "endpoint_egress_cidrs" {
-  description = "CIDRs allowed for VPC endpoint egress"
+  description = "CIDR blocks allowed for VPC endpoint egress."
   type        = list(string)
 
   validation {
     condition = alltrue([
       for cidr in var.endpoint_egress_cidrs : can(cidrnetmask(cidr))
     ])
+
     error_message = "All endpoint egress CIDRs must be valid CIDRs."
   }
 }
 
-variable "ecr_repository_name" {
-  description = "ECR repository name"
+
+############################################################
+# EKS - Cluster
+############################################################
+
+variable "cluster_name" {
+  description = "Name of the EKS cluster."
   type        = string
-
-  validation {
-    condition     = can(regex("^[a-z0-9]+([._/-][a-z0-9]+)*$", trimspace(var.ecr_repository_name)))
-    error_message = "ECR repository name must contain only lowercase letters, numbers, '.', '_' or '/'."
-  }
-}
-
-variable "ecr_image_tag_mutability" {
-  description = "ECR image tag mutability"
-  type        = string
-
-  validation {
-    condition = contains(
-      ["MUTABLE", "IMMUTABLE"],
-      var.ecr_image_tag_mutability
-    )
-
-    error_message = "ECR image tag mutability must be MUTABLE or IMMUTABLE."
-  }
-}
-
-variable "ecr_scan_on_push" {
-  description = "Enable ECR image scanning on push"
-  type        = bool
-}
-
-variable "ecr_enhanced_scanning_enabled" {
-  description = "Enable Amazon Inspector enhanced ECR scanning."
-  type        = bool
-}
-
-variable "ecr_enhanced_scanning_type" {
-  description = "ECR enhanced scanning frequency."
-  type        = string
-
-  validation {
-    condition = contains(
-      ["CONTINUOUS_SCAN", "SCAN_ON_PUSH"],
-      var.ecr_enhanced_scanning_type
-    )
-
-    error_message = "ECR enhanced scanning type must be CONTINUOUS_SCAN or SCAN_ON_PUSH."
-  }
-}
-
-variable "ecr_encryption_type" {
-  description = "ECR repository encryption type."
-  type        = string
-
-  validation {
-    condition = contains(
-      ["AES256", "KMS"],
-      var.ecr_encryption_type
-    )
-
-    error_message = "ECR encryption type must be AES256 or KMS."
-  }
-}
-
-variable "ecr_kms_key_arn" {
-  description = "KMS key ARN used for ECR encryption when KMS encryption is enabled."
-  type        = string
-  default     = null
-}
-
-variable "ecr_lifecycle_max_image_count" {
-  description = "Maximum number of ECR images retained."
-  type        = number
-
-  validation {
-    condition     = var.ecr_lifecycle_max_image_count >= 1
-    error_message = "ECR lifecycle image count must be greater than zero."
-  }
-}
-
-variable "ecr_repository_read_principals" {
-  description = "IAM principals allowed to pull images from ECR."
-  type        = list(string)
-  default     = []
-}
-
-variable "ecr_repository_write_principals" {
-  description = "IAM principals allowed to push images to ECR."
-  type        = list(string)
-  default     = []
 }
 
 variable "kubernetes_version" {
   description = "Kubernetes version for the EKS cluster."
-
-  type = string
+  type        = string
 
   validation {
-    condition     = can(regex("^[0-9]+\\.[0-9]+$", var.kubernetes_version))
-    error_message = "kubernetes_version must be in the format major.minor, for example 1.31."
+    condition = can(
+      regex("^[0-9]+\\.[0-9]+$", var.kubernetes_version)
+    )
+
+    error_message = "kubernetes_version must use the major.minor format, for example 1.31."
   }
 }
 
-variable "karpenter_chart_version" {
-  description = "Karpenter Helm chart version"
+variable "node_group_name" {
+  description = "Name of the EKS managed node group."
   type        = string
 }
 
+variable "desired_size" {
+  description = "Desired number of nodes in the managed node group."
+  type        = number
+}
+
+variable "min_size" {
+  description = "Minimum number of nodes in the managed node group."
+  type        = number
+}
+
+variable "max_size" {
+  description = "Maximum number of nodes in the managed node group."
+  type        = number
+}
+
+variable "eks_ip_family" {
+  description = "IP address family used by the EKS cluster."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["ipv4", "ipv6"],
+      var.eks_ip_family
+    )
+
+    error_message = "eks_ip_family must be either ipv4 or ipv6."
+  }
+}
+
+variable "eks_authentication_mode" {
+  description = "Authentication mode used by the EKS cluster."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["CONFIG_MAP", "API", "API_AND_CONFIG_MAP"],
+      var.eks_authentication_mode
+    )
+
+    error_message = "eks_authentication_mode must be CONFIG_MAP, API, or API_AND_CONFIG_MAP."
+  }
+}
+
+variable "eks_bootstrap_cluster_creator_admin_permissions" {
+  description = "Whether the cluster creator receives bootstrap administrator permissions."
+  type        = bool
+}
+
+
+############################################################
+# EKS - Add-ons
+############################################################
+
 variable "eks_addons" {
-  description = "EKS managed add-ons to install for this environment."
+  description = "EKS managed add-ons configured for this environment."
 
   type = map(object({
     addon_name                  = string
@@ -270,13 +258,163 @@ variable "eks_addons" {
   }
 }
 
+
+############################################################
+# Karpenter
+############################################################
+
+variable "karpenter_chart_version" {
+  description = "Karpenter Helm chart version."
+  type        = string
+}
+
+
+############################################################
+# ECR - Repository
+############################################################
+
+variable "ecr_repository_name" {
+  description = "Name of the ECR repository."
+  type        = string
+
+  validation {
+    condition = can(
+      regex(
+        "^[a-z0-9]+([._*/-][a-z0-9]+)*$",
+        trimspace(var.ecr_repository_name)
+      )
+    )
+
+    error_message = "ecr_repository_name must contain only lowercase letters, numbers, '.', '_', '*', '/', or '-'."
+  }
+}
+
+variable "ecr_image_tag_mutability" {
+  description = "Whether ECR image tags are mutable or immutable."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["MUTABLE", "IMMUTABLE"],
+      var.ecr_image_tag_mutability
+    )
+
+    error_message = "ecr_image_tag_mutability must be MUTABLE or IMMUTABLE."
+  }
+}
+
+variable "ecr_scan_on_push" {
+  description = "Whether basic ECR image scanning is enabled on image push."
+  type        = bool
+}
+
+variable "ecr_force_delete" {
+  description = "Whether Terraform can delete the ECR repository when it contains images."
+  type        = bool
+}
+
+
+############################################################
+# ECR - Enhanced Scanning
+############################################################
+
+variable "ecr_enhanced_scanning_enabled" {
+  description = "Whether Amazon Inspector enhanced ECR scanning is enabled."
+  type        = bool
+}
+
+variable "ecr_enhanced_scanning_type" {
+  description = "Enhanced ECR scanning frequency."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["CONTINUOUS_SCAN", "SCAN_ON_PUSH"],
+      var.ecr_enhanced_scanning_type
+    )
+
+    error_message = "ecr_enhanced_scanning_type must be CONTINUOUS_SCAN or SCAN_ON_PUSH."
+  }
+}
+
+variable "ecr_enhanced_scanning_scan_type" {
+  description = "ECR registry scanning configuration type."
+  type        = string
+}
+
+variable "ecr_enhanced_scanning_filter_type" {
+  description = "ECR repository filter type used by enhanced scanning."
+  type        = string
+}
+
+
+############################################################
+# ECR - Encryption
+############################################################
+
+variable "ecr_encryption_type" {
+  description = "Encryption type used by the ECR repository."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["AES256", "KMS"],
+      var.ecr_encryption_type
+    )
+
+    error_message = "ecr_encryption_type must be AES256 or KMS."
+  }
+}
+
+variable "ecr_kms_key_arn" {
+  description = "KMS key ARN used when ECR encryption type is KMS."
+  type        = string
+  default     = null
+
+  validation {
+    condition = (
+      var.ecr_kms_key_arn == null ||
+      can(
+        regex(
+          "^arn:[^:]+:kms:[^:]+:[0-9]{12}:key/.+$",
+          var.ecr_kms_key_arn
+        )
+      )
+    )
+
+    error_message = "ecr_kms_key_arn must be a valid KMS key ARN or null."
+  }
+}
+
+
+############################################################
+# ECR - Repository Access
+############################################################
+
+variable "ecr_repository_read_principals" {
+  description = "IAM principals allowed to pull images from ECR."
+  type        = list(string)
+  default     = []
+}
+
+variable "ecr_repository_write_principals" {
+  description = "IAM principals allowed to push images to ECR."
+  type        = list(string)
+  default     = []
+}
+
+
+############################################################
+# ECR - Lifecycle
+############################################################
+
 variable "ecr_lifecycle_rule_priority" {
   description = "Priority of the ECR lifecycle rule."
   type        = number
 
   validation {
     condition     = var.ecr_lifecycle_rule_priority >= 1
-    error_message = "ECR lifecycle rule priority must be greater than or equal to 1."
+    error_message = "ecr_lifecycle_rule_priority must be greater than or equal to 1."
   }
 }
 
@@ -286,7 +424,7 @@ variable "ecr_lifecycle_description" {
 }
 
 variable "ecr_lifecycle_tag_status" {
-  description = "Tag status selection for the ECR lifecycle rule."
+  description = "Tag status selection used by the ECR lifecycle rule."
   type        = string
 
   validation {
@@ -309,10 +447,19 @@ variable "ecr_lifecycle_count_type" {
       var.ecr_lifecycle_count_type
     )
 
-    error_message = "Invalid ECR lifecycle count type."
+    error_message = "ecr_lifecycle_count_type must be imageCountMoreThan or sinceImagePushed."
   }
 }
 
+variable "ecr_lifecycle_max_image_count" {
+  description = "Maximum number of ECR images retained."
+  type        = number
+
+  validation {
+    condition     = var.ecr_lifecycle_max_image_count >= 1
+    error_message = "ecr_lifecycle_max_image_count must be greater than or equal to 1."
+  }
+}
 
 variable "ecr_lifecycle_action_type" {
   description = "Action performed when the ECR lifecycle rule matches."
@@ -320,9 +467,14 @@ variable "ecr_lifecycle_action_type" {
 
   validation {
     condition     = var.ecr_lifecycle_action_type == "expire"
-    error_message = "ECR lifecycle action type must be expire."
+    error_message = "ecr_lifecycle_action_type must be expire."
   }
 }
+
+
+############################################################
+# ECR - Resource Tag Configuration
+############################################################
 
 variable "ecr_managed_by" {
   description = "Value used for the ECR ManagedBy tag."
@@ -334,46 +486,77 @@ variable "ecr_module_name" {
   type        = string
 }
 
-variable "ecr_enhanced_scanning_scan_type" {
-  description = "ECR registry scanning type."
+
+############################################################
+# EKS - IAM Assume Role Configuration
+############################################################
+
+variable "eks_cluster_assume_role_actions" {
+  description = "IAM actions allowed for the EKS cluster assume role."
+  type        = list(string)
+}
+
+variable "eks_cluster_assume_role_principal_type" {
+  description = "Principal type for the EKS cluster IAM role."
   type        = string
 }
 
-variable "ecr_enhanced_scanning_filter_type" {
-  description = "ECR repository filter type for enhanced scanning."
+variable "eks_cluster_assume_role_principal_identifiers" {
+  description = "Principal identifiers for the EKS cluster IAM role."
+  type        = list(string)
+}
+
+variable "eks_node_assume_role_actions" {
+  description = "IAM actions allowed for the EKS node assume role."
+  type        = list(string)
+}
+
+variable "eks_node_assume_role_principal_type" {
+  description = "Principal type for the EKS node IAM role."
   type        = string
 }
 
-variable "ecr_force_delete" {
-  description = "Whether the ECR repository can be force deleted."
-  type        = bool
+variable "eks_node_assume_role_principal_identifiers" {
+  description = "Principal identifiers for the EKS node IAM role."
+  type        = list(string)
 }
 
-variable "eks_ip_family" {
-  description = "IP address family used by the EKS cluster."
+
+############################################################
+# EKS - IAM Role Naming
+############################################################
+
+variable "eks_cluster_role_name_suffix" {
+  description = "Suffix used for the EKS cluster IAM role name."
   type        = string
-
-  validation {
-    condition     = contains(["ipv4", "ipv6"], var.eks_ip_family)
-    error_message = "eks_ip_family must be either ipv4 or ipv6."
-  }
 }
 
-variable "eks_authentication_mode" {
-  description = "EKS authentication mode."
+variable "eks_node_role_name_suffix" {
+  description = "Suffix used for the EKS node IAM role name."
   type        = string
-
-  validation {
-    condition = contains(
-      ["CONFIG_MAP", "API", "API_AND_CONFIG_MAP"],
-      var.eks_authentication_mode
-    )
-
-    error_message = "eks_authentication_mode must be CONFIG_MAP, API, or API_AND_CONFIG_MAP."
-  }
 }
 
-variable "eks_bootstrap_cluster_creator_admin_permissions" {
-  description = "Whether the cluster creator receives bootstrap administrator permissions."
-  type        = bool
+
+############################################################
+# EKS - IAM Managed Policies
+############################################################
+
+variable "eks_cluster_policy_arn" {
+  description = "IAM policy ARN attached to the EKS cluster role."
+  type        = string
+}
+
+variable "eks_worker_node_policy_arn" {
+  description = "IAM policy ARN attached to EKS worker nodes."
+  type        = string
+}
+
+variable "eks_cni_policy_arn" {
+  description = "IAM policy ARN attached to EKS worker nodes for VPC CNI."
+  type        = string
+}
+
+variable "eks_ecr_read_policy_arn" {
+  description = "IAM policy ARN attached to EKS worker nodes for ECR read access."
+  type        = string
 }

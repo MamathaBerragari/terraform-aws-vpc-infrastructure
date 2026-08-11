@@ -52,6 +52,80 @@ variable "bootstrap_cluster_creator_admin_permissions" {
   type        = bool
 }
 
+
+############################################################
+# IAM Assume Role Configuration
+############################################################
+
+variable "cluster_assume_role_actions" {
+  description = "IAM actions allowed in the EKS cluster assume role policy."
+  type        = list(string)
+}
+
+variable "cluster_assume_role_principal_type" {
+  description = "Principal type for the EKS cluster IAM role."
+  type        = string
+}
+
+variable "cluster_assume_role_principal_identifiers" {
+  description = "Principal identifiers for the EKS cluster IAM role."
+  type        = list(string)
+}
+
+variable "node_assume_role_actions" {
+  description = "IAM actions allowed in the EKS node assume role policy."
+  type        = list(string)
+}
+
+variable "node_assume_role_principal_type" {
+  description = "Principal type for the EKS node IAM role."
+  type        = string
+}
+
+variable "node_assume_role_principal_identifiers" {
+  description = "Principal identifiers for the EKS node IAM role."
+  type        = list(string)
+}
+
+############################################################
+# IAM Role Naming
+############################################################
+
+variable "cluster_role_name_suffix" {
+  description = "Suffix used for the EKS cluster IAM role name."
+  type        = string
+}
+
+variable "node_role_name_suffix" {
+  description = "Suffix used for the EKS node IAM role name."
+  type        = string
+}
+
+############################################################
+# EKS IAM Managed Policies
+############################################################
+
+variable "cluster_policy_arn" {
+  description = "AWS managed IAM policy ARN attached to the EKS cluster role."
+  type        = string
+}
+
+variable "worker_node_policy_arn" {
+  description = "AWS managed IAM policy ARN attached to EKS worker nodes."
+  type        = string
+}
+
+variable "cni_policy_arn" {
+  description = "AWS managed IAM policy ARN attached to EKS worker nodes for VPC CNI."
+  type        = string
+}
+
+variable "ecr_read_policy_arn" {
+  description = "AWS managed IAM policy ARN attached to EKS worker nodes for ECR read access."
+  type        = string
+}
+
+
 ###############################################################
 # Networking
 ###############################################################
