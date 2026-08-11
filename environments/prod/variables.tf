@@ -560,3 +560,129 @@ variable "eks_ecr_read_policy_arn" {
   description = "IAM policy ARN attached to EKS worker nodes for ECR read access."
   type        = string
 }
+
+############################################################
+# EKS Common Tags
+############################################################
+
+variable "eks_managed_by" {
+  description = "ManagedBy tag value for EKS resources."
+  type        = string
+}
+
+variable "eks_module_name" {
+  description = "Module tag value for EKS resources."
+  type        = string
+}
+
+############################################################
+# EKS Launch Template
+############################################################
+
+variable "eks_launch_template_name_suffix" {
+  description = "Launch template name suffix."
+  type        = string
+}
+
+variable "eks_launch_template_update_default_version" {
+  description = "Whether to update the launch template default version."
+  type        = bool
+}
+
+variable "eks_launch_template_http_endpoint" {
+  description = "EC2 metadata service HTTP endpoint."
+  type        = string
+}
+
+variable "eks_launch_template_http_tokens" {
+  description = "EC2 metadata service token requirement."
+  type        = string
+}
+
+variable "eks_launch_template_monitoring_enabled" {
+  description = "Whether detailed EC2 monitoring is enabled."
+  type        = bool
+}
+
+variable "eks_launch_template_tag_resource_type" {
+  description = "Resource type receiving launch template tags."
+  type        = string
+}
+
+variable "eks_worker_node_name_suffix" {
+  description = "Worker node Name tag suffix."
+  type        = string
+}
+
+############################################################
+# EKS CloudWatch CPU Alarm
+############################################################
+
+variable "eks_cpu_alarm_name_suffix" {
+  description = "CPU alarm name suffix."
+  type        = string
+}
+
+variable "eks_cpu_alarm_comparison_operator" {
+  description = "CloudWatch CPU alarm comparison operator."
+  type        = string
+}
+
+variable "eks_cpu_alarm_evaluation_periods" {
+  description = "CPU alarm evaluation periods."
+  type        = number
+}
+
+variable "eks_cpu_alarm_metric_name" {
+  description = "CloudWatch CPU metric name."
+  type        = string
+}
+
+variable "eks_cpu_alarm_namespace" {
+  description = "CloudWatch CPU metric namespace."
+  type        = string
+}
+
+variable "eks_cpu_alarm_period" {
+  description = "CPU alarm evaluation period."
+  type        = number
+}
+
+variable "eks_cpu_alarm_statistic" {
+  description = "CPU alarm statistic."
+  type        = string
+}
+
+variable "eks_cpu_alarm_threshold" {
+  description = "CPU alarm threshold."
+  type        = number
+}
+
+variable "eks_cpu_alarm_description" {
+  description = "CPU alarm description."
+  type        = string
+}
+
+variable "eks_cpu_alarm_treat_missing_data" {
+  description = "CloudWatch missing data treatment."
+  type        = string
+}
+
+############################################################
+# EKS CloudWatch Log Group
+############################################################
+
+variable "eks_log_group_name_suffix" {
+  description = "EKS CloudWatch log group name suffix."
+  type        = string
+}
+
+variable "eks_log_retention_in_days" {
+  description = "EKS CloudWatch log retention period."
+  type        = number
+}
+
+variable "eks_log_group_name_prefix" {
+  description = "Prefix used for the EKS CloudWatch log group name."
+  type        = string
+}

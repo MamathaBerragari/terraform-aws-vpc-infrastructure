@@ -93,6 +93,34 @@ module "eks" {
   cluster_assume_role_principal_type        = var.eks_cluster_assume_role_principal_type
   cluster_assume_role_principal_identifiers = var.eks_cluster_assume_role_principal_identifiers
 
+
+  managed_by  = var.eks_managed_by
+  module_name = var.eks_module_name
+
+  launch_template_name_suffix            = var.eks_launch_template_name_suffix
+  launch_template_update_default_version = var.eks_launch_template_update_default_version
+  launch_template_http_endpoint          = var.eks_launch_template_http_endpoint
+  launch_template_http_tokens            = var.eks_launch_template_http_tokens
+  launch_template_monitoring_enabled     = var.eks_launch_template_monitoring_enabled
+  launch_template_tag_resource_type      = var.eks_launch_template_tag_resource_type
+  worker_node_name_suffix                = var.eks_worker_node_name_suffix
+
+  cpu_alarm_name_suffix         = var.eks_cpu_alarm_name_suffix
+  cpu_alarm_comparison_operator = var.eks_cpu_alarm_comparison_operator
+  cpu_alarm_evaluation_periods  = var.eks_cpu_alarm_evaluation_periods
+  cpu_alarm_metric_name         = var.eks_cpu_alarm_metric_name
+  cpu_alarm_namespace           = var.eks_cpu_alarm_namespace
+  cpu_alarm_period              = var.eks_cpu_alarm_period
+  cpu_alarm_statistic           = var.eks_cpu_alarm_statistic
+  cpu_alarm_threshold           = var.eks_cpu_alarm_threshold
+  cpu_alarm_description         = var.eks_cpu_alarm_description
+  cpu_alarm_treat_missing_data  = var.eks_cpu_alarm_treat_missing_data
+
+  eks_log_group_name_suffix = var.eks_log_group_name_suffix
+  eks_log_retention_in_days = var.eks_log_retention_in_days
+
+  eks_log_group_name_prefix = var.eks_log_group_name_prefix
+
   node_assume_role_actions               = var.eks_node_assume_role_actions
   node_assume_role_principal_type        = var.eks_node_assume_role_principal_type
   node_assume_role_principal_identifiers = var.eks_node_assume_role_principal_identifiers

@@ -1,11 +1,9 @@
 locals {
-
   common_tags = merge(
     {
-      ManagedBy = "Terraform"
-      Module    = "Runtime-EKS"
+      ManagedBy = var.managed_by
+      Module    = var.module_name
     },
     var.tags
   )
-
 }

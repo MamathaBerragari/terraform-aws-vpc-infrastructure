@@ -208,6 +208,51 @@ eks_addons = {
 
 
 ############################################################
+# EKS Common Tags
+############################################################
+
+eks_managed_by  = "Terraform"
+eks_module_name = "Runtime-EKS"
+
+############################################################
+# EKS Launch Template
+############################################################
+
+eks_launch_template_name_suffix            = "-lt-"
+eks_launch_template_update_default_version = true
+eks_launch_template_http_endpoint          = "enabled"
+eks_launch_template_http_tokens            = "required"
+eks_launch_template_monitoring_enabled     = true
+eks_launch_template_tag_resource_type      = "instance"
+eks_worker_node_name_suffix                = "-worker"
+
+############################################################
+# EKS CloudWatch CPU Alarm
+############################################################
+
+eks_cpu_alarm_name_suffix         = "-high-cpu"
+eks_cpu_alarm_comparison_operator = "GreaterThanThreshold"
+eks_cpu_alarm_evaluation_periods  = 2
+eks_cpu_alarm_metric_name         = "CPUUtilization"
+eks_cpu_alarm_namespace           = "AWS/EKS"
+eks_cpu_alarm_period              = 300
+eks_cpu_alarm_statistic           = "Average"
+eks_cpu_alarm_threshold           = 80
+eks_cpu_alarm_description         = "High CPU utilization on EKS cluster"
+eks_cpu_alarm_treat_missing_data  = "notBreaching"
+
+
+
+############################################################
+# EKS CloudWatch Log Group
+############################################################
+
+eks_log_group_name_prefix = "/aws/eks/"
+eks_log_group_name_suffix = "/cluster"
+eks_log_retention_in_days = 30
+
+
+############################################################
 # KARPENTER
 ############################################################
 
