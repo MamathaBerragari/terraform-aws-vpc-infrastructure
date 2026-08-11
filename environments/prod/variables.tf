@@ -269,3 +269,57 @@ variable "eks_addons" {
     error_message = "service_account_role_type must be none or ebs_csi."
   }
 }
+
+variable "ecr_lifecycle_rule_priority" {
+  description = "Priority of the ECR lifecycle rule."
+  type        = number
+
+  validation {
+    condition     = var.ecr_lifecycle_rule_priority >= 1
+    error_message = "ECR lifecycle rule priority must be greater than or equal to 1."
+  }
+}
+
+variable "ecr_lifecycle_description" {
+  description = "Description of the ECR lifecycle rule."
+  type        = string
+}
+
+variable "ecr_lifecycle_tag_status" {
+  description = "Tag status selection for the ECR lifecycle rule."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["tagged", "untagged", "any"],
+      var.ecr_lifecycle_tag_status
+    )
+
+    error_message = "ecr_lifecycle_tag_status must be tagged, untagged, or any."
+  }
+}
+
+variable "ecr_lifecycle_count_type" {
+  description = "Count type used by the ECR lifecycle rule."
+  type        = string
+
+  validation {
+    condition = contains(
+      ["imageCountMoreThan", "sinceImagePushed"],
+      var.ecr_lifecycle_count_type
+    )
+
+    error_message = "Invalid ECR lifecycle count type."
+  }
+}
+
+
+variable "ecr_lifecycle_action_type" {
+  description = "Action performed when the ECR lifecycle rule matches."
+  type        = string
+
+  validation {
+    condition     = var.ecr_lifecycle_action_type == "expire"
+    error_message = "ECR lifecycle action type must be expire."
+  }
+}

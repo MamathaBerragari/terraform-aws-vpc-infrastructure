@@ -47,9 +47,8 @@ module "ecr" {
 
   repository_name = var.ecr_repository_name
 
-  image_tag_mutability      = var.ecr_image_tag_mutability
-  scan_on_push              = var.ecr_scan_on_push
-  lifecycle_max_image_count = var.ecr_lifecycle_max_image_count
+  image_tag_mutability = var.ecr_image_tag_mutability
+  scan_on_push         = var.ecr_scan_on_push
 
   enhanced_scanning_enabled = var.ecr_enhanced_scanning_enabled
   enhanced_scanning_type    = var.ecr_enhanced_scanning_type
@@ -59,6 +58,13 @@ module "ecr" {
 
   repository_read_principals  = var.ecr_repository_read_principals
   repository_write_principals = var.ecr_repository_write_principals
+
+  lifecycle_rule_priority   = var.ecr_lifecycle_rule_priority
+  lifecycle_description     = var.ecr_lifecycle_description
+  lifecycle_tag_status      = var.ecr_lifecycle_tag_status
+  lifecycle_count_type      = var.ecr_lifecycle_count_type
+  lifecycle_max_image_count = var.ecr_lifecycle_max_image_count
+  lifecycle_action_type     = var.ecr_lifecycle_action_type
 
   tags = local.common_tags
 }

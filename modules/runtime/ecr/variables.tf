@@ -50,17 +50,6 @@ variable "enhanced_scanning_type" {
   }
 }
 
-variable "lifecycle_max_image_count" {
-  description = "Maximum number of images retained in the repository."
-  type        = number
-  default     = 20
-
-  validation {
-    condition     = var.lifecycle_max_image_count >= 1
-    error_message = "lifecycle_max_image_count must be greater than or equal to 1."
-  }
-}
-
 variable "repository_read_principals" {
   description = "IAM principals allowed to pull images from the repository."
   type        = list(string)
@@ -107,4 +96,40 @@ variable "tags" {
   description = "Common tags applied to ECR resources."
   type        = map(string)
   default     = {}
+}
+
+variable "lifecycle_rule_priority" {
+  description = "Priority of the ECR lifecycle rule."
+  type        = number
+}
+
+variable "lifecycle_description" {
+  description = "Description of the ECR lifecycle rule."
+  type        = string
+}
+
+variable "lifecycle_tag_status" {
+  description = "Tag status selection for the ECR lifecycle rule."
+  type        = string
+}
+
+variable "lifecycle_count_type" {
+  description = "Count type used by the ECR lifecycle rule."
+  type        = string
+}
+
+
+variable "lifecycle_action_type" {
+  description = "Action performed by the ECR lifecycle rule."
+  type        = string
+}
+
+variable "lifecycle_max_image_count" {
+  description = "Maximum number of images retained in the repository."
+  type        = number
+
+  validation {
+    condition     = var.lifecycle_max_image_count >= 1
+    error_message = "lifecycle_max_image_count must be greater than or equal to 1."
+  }
 }
