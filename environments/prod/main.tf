@@ -64,13 +64,13 @@ module "ecr" {
 }
 
 module "eks" {
-  source       = "../../modules/runtime/eks"
+  source = "../../modules/runtime/eks"
+
   region       = var.aws_region
   cluster_name = var.cluster_name
 
   kubernetes_version = var.kubernetes_version
-
-  cluster_version = var.kubernetes_version
+  cluster_version    = var.kubernetes_version
 
   karpenter_chart_version = var.karpenter_chart_version
 
@@ -84,6 +84,8 @@ module "eks" {
 
   private_subnet_ids       = module.vpc.private_subnet_ids
   control_plane_subnet_ids = module.vpc.private_subnet_ids
+
+  eks_addons = var.eks_addons
 
   tags = local.common_tags
 }

@@ -87,3 +87,34 @@ ecr_lifecycle_max_image_count = 20
 
 ecr_repository_read_principals  = []
 ecr_repository_write_principals = []
+
+
+eks_addons = {
+  vpc_cni = {
+    addon_name                  = "vpc-cni"
+    addon_version               = null
+    resolve_conflicts_on_create = "OVERWRITE"
+    service_account_role_type   = "none"
+  }
+
+  coredns = {
+    addon_name                  = "coredns"
+    addon_version               = null
+    resolve_conflicts_on_create = "OVERWRITE"
+    service_account_role_type   = "none"
+  }
+
+  kube_proxy = {
+    addon_name                  = "kube-proxy"
+    addon_version               = null
+    resolve_conflicts_on_create = "OVERWRITE"
+    service_account_role_type   = "none"
+  }
+
+  ebs_csi = {
+    addon_name                  = "aws-ebs-csi-driver"
+    addon_version               = null
+    resolve_conflicts_on_create = "OVERWRITE"
+    service_account_role_type   = "ebs_csi"
+  }
+}

@@ -138,29 +138,43 @@ variable "enabled_cluster_log_types" {
     "scheduler"
   ]
 }
-
 ###############################################################
-# Add-ons
+# EKS Add-ons
 ###############################################################
 
-variable "enable_vpc_cni" {
-  type    = bool
-  default = true
-}
+variable "eks_addons" {
+  description = "EKS managed add-ons to install."
 
-variable "enable_coredns" {
-  type    = bool
-  default = true
-}
+  type = map(object({
+    addon_name                  = string
+    addon_version               = optional(string)
+    resolve_conflicts_on_create = string
+    service_account_role_type   = string
+  }))
 
-variable "enable_kube_proxy" {
-  type    = bool
-  default = true
-}
+  validation {
+    condition = alltrue([
+      for addon in values(var.eks_addons) :
+      contains(
+        ["OVERWRITE", "NONE"],
+        addon.resolve_conflicts_on_create
+      )
+    ])
 
-variable "enable_ebs_csi_driver" {
-  type    = bool
-  default = true
+    error_message = "resolve_conflicts_on_create must be OVERWRITE or NONE."
+  }
+
+  validation {
+    condition = alltrue([
+      for addon in values(var.eks_addons) :
+      contains(
+        ["none", "ebs_csi"],
+        addon.service_account_role_type
+      )
+    ])
+
+    error_message = "service_account_role_type must be none or ebs_csi."
+  }
 }
 
 ###############################################################

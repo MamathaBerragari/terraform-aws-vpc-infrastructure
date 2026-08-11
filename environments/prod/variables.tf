@@ -234,3 +234,38 @@ variable "karpenter_chart_version" {
   description = "Karpenter Helm chart version"
   type        = string
 }
+
+variable "eks_addons" {
+  description = "EKS managed add-ons to install for this environment."
+
+  type = map(object({
+    addon_name                  = string
+    addon_version               = optional(string)
+    resolve_conflicts_on_create = string
+    service_account_role_type   = string
+  }))
+
+  validation {
+    condition = alltrue([
+      for addon in values(var.eks_addons) :
+      contains(
+        ["OVERWRITE", "NONE"],
+        addon.resolve_conflicts_on_create
+      )
+    ])
+
+    error_message = "resolve_conflicts_on_create must be OVERWRITE or NONE."
+  }
+
+  validation {
+    condition = alltrue([
+      for addon in values(var.eks_addons) :
+      contains(
+        ["none", "ebs_csi"],
+        addon.service_account_role_type
+      )
+    ])
+
+    error_message = "service_account_role_type must be none or ebs_csi."
+  }
+}
