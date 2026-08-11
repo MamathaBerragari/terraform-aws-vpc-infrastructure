@@ -668,6 +668,76 @@ variable "eks_cpu_alarm_treat_missing_data" {
   type        = string
 }
 
+
+############################################################
+# EKS Node Group Configuration
+############################################################
+
+variable "eks_disk_size" {
+  description = "EBS root volume size in GiB for EKS managed nodes."
+  type        = number
+
+  validation {
+    condition     = var.eks_disk_size >= 20
+    error_message = "eks_disk_size must be at least 20 GiB."
+  }
+}
+
+
+variable "eks_node_group_name_suffix" {
+  description = "Suffix appended to the EKS managed node group name."
+  type        = string
+}
+
+variable "eks_capacity_type" {
+  description = "Capacity type used by EKS managed node groups."
+  type        = string
+
+  validation {
+    condition     = contains(["ON_DEMAND", "SPOT"], var.eks_capacity_type)
+    error_message = "eks_capacity_type must be ON_DEMAND or SPOT."
+  }
+}
+
+variable "eks_ami_type" {
+  description = "AMI type used by EKS managed node groups."
+  type        = string
+}
+
+variable "eks_instance_types" {
+  description = "EC2 instance types used by EKS managed node groups."
+  type        = list(string)
+
+  validation {
+    condition     = length(var.eks_instance_types) > 0
+    error_message = "eks_instance_types must contain at least one instance type."
+  }
+}
+
+variable "eks_max_unavailable" {
+  description = "Maximum number of unavailable nodes during node group updates."
+  type        = number
+
+  validation {
+    condition     = var.eks_max_unavailable >= 1
+    error_message = "eks_max_unavailable must be greater than or equal to 1."
+  }
+}
+
+
+variable "eks_endpoint_private_access" {
+  description = "Whether the EKS API endpoint has private access"
+  type        = bool
+}
+
+
+variable "eks_endpoint_public_access" {
+  description = "Whether the EKS API endpoint has public access"
+  type        = bool
+}
+
+
+
 ############################################################
 # EKS CloudWatch Log Group
 ############################################################
@@ -685,4 +755,33 @@ variable "eks_log_retention_in_days" {
 variable "eks_log_group_name_prefix" {
   description = "Prefix used for the EKS CloudWatch log group name."
   type        = string
+}
+
+
+variable "eks_public_access_cidrs" {
+  description = "CIDR ranges allowed to access the public EKS API endpoint."
+  type        = list(string)
+}
+
+variable "enabled_cluster_log_types" {
+  description = "EKS control plane log types enabled for the cluster."
+  type        = list(string)
+
+  validation {
+    condition = alltrue([
+      for log_type in var.enabled_cluster_log_types :
+      contains(
+        [
+          "api",
+          "audit",
+          "authenticator",
+          "controllerManager",
+          "scheduler"
+        ],
+        log_type
+      )
+    ])
+
+    error_message = "enabled_cluster_log_types contains an unsupported EKS control plane log type."
+  }
 }

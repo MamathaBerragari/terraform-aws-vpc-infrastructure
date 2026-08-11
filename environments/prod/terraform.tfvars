@@ -242,6 +242,38 @@ eks_cpu_alarm_description         = "High CPU utilization on EKS cluster"
 eks_cpu_alarm_treat_missing_data  = "notBreaching"
 
 
+############################################################
+# EKS Node Group Configuration
+############################################################
+eks_disk_size              = 50
+eks_node_group_name_suffix = "-default"
+
+eks_capacity_type = "ON_DEMAND"
+
+eks_ami_type = "AL2023_x86_64_STANDARD"
+
+eks_instance_types = [
+  "t3.medium"
+]
+
+eks_max_unavailable = 1
+
+
+enabled_cluster_log_types = [
+  "api",
+  "audit",
+  "authenticator",
+  "controllerManager",
+  "scheduler"
+]
+
+############################################################
+# EKS API Endpoint Configuration
+############################################################
+eks_endpoint_private_access = true
+eks_endpoint_public_access  = true
+eks_public_access_cidrs     = ["0.0.0.0/0"]
+
 
 ############################################################
 # EKS CloudWatch Log Group
