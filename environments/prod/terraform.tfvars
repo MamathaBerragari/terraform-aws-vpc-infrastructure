@@ -320,3 +320,53 @@ karpenter_consolidate_after = "30s"
 ############################################################
 
 enable_karpenter = true
+
+
+rds_db_identifier = "postgres"
+
+rds_engine                 = "postgres"
+rds_engine_version         = "16"
+rds_parameter_group_family = "postgres16"
+
+rds_instance_class = "db.t3.micro"
+
+rds_allocated_storage     = 20
+rds_max_allocated_storage = 50
+rds_storage_type          = "gp3"
+
+rds_database_name = "applicationdb"
+rds_port          = 5432
+
+rds_master_username = "postgresadmin"
+
+rds_multi_az = false
+
+rds_storage_encrypted = true
+rds_kms_key_id        = null
+
+rds_backup_retention_period = 7
+
+rds_performance_insights_enabled = false
+rds_monitoring_interval          = 0
+
+rds_deletion_protection = false
+
+rds_skip_final_snapshot = true
+rds_apply_immediately   = true
+
+rds_iam_database_authentication_enabled = true
+
+rds_create_connect_role = false
+
+rds_secret_recovery_window_in_days = 0
+
+endpoint_ingress_description = "Allow HTTPS from VPC"
+endpoint_port                = 443
+endpoint_protocol            = "tcp"
+
+endpoint_egress_description = "Allow outbound HTTPS"
+endpoint_egress_from_port   = 0
+endpoint_egress_to_port     = 0
+endpoint_egress_protocol    = "-1"
+
+security_group_description = "Security Group for Interface VPC Endpoints"

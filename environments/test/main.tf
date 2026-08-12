@@ -23,27 +23,32 @@ module "vpc" {
 module "vpc_endpoint" {
   source = "../../modules/foundation/vpc_endpoint"
 
-  project_name = var.project_name
-  environment  = var.environment
-  aws_region   = var.aws_region
-
   vpc_id = module.vpc.vpc_id
 
-  private_subnet_ids = module.vpc.private_subnet_ids
-
+  aws_region              = var.aws_region
+  project_name            = var.project_name
+  environment             = var.environment
   private_route_table_ids = module.vpc.private_route_table_ids
 
   interface_endpoints = var.interface_endpoints
+  gateway_endpoints   = var.gateway_endpoints
 
-  gateway_endpoints = var.gateway_endpoints
+  private_subnet_ids = module.vpc.private_subnet_ids
 
   private_dns_enabled = var.private_dns_enabled
 
-  endpoint_ingress_cidrs = [
-    var.vpc_cidr
-  ]
+  endpoint_ingress_cidrs       = var.endpoint_ingress_cidrs
+  endpoint_ingress_description = var.endpoint_ingress_description
+  endpoint_port                = var.endpoint_port
+  endpoint_protocol            = var.endpoint_protocol
 
-  endpoint_egress_cidrs = var.endpoint_egress_cidrs
+  endpoint_egress_cidrs       = var.endpoint_egress_cidrs
+  endpoint_egress_description = var.endpoint_egress_description
+  endpoint_egress_from_port   = var.endpoint_egress_from_port
+  endpoint_egress_to_port     = var.endpoint_egress_to_port
+  endpoint_egress_protocol    = var.endpoint_egress_protocol
+
+  security_group_description = var.security_group_description
 
   tags = var.tags
 }
@@ -86,7 +91,7 @@ module "ecr" {
 module "eks" {
   source           = "../../modules/runtime/eks"
   disk_size        = var.eks_disk_size
-  enable_karpenter = true
+  enable_karpenter = var.enable_karpenter
   # ----------------------------------------------------------
   # Basic EKS Configuration
   # ----------------------------------------------------------
@@ -348,4 +353,57 @@ moved {
 moved {
   from = module.vpc.aws_route_table_association.public_assoc["02"]
   to   = module.vpc.aws_route_table_association.public_assoc["ap-south-1b"]
+}
+
+
+module "rds" {
+  source = "../../modules/runtime/rds"
+
+  environment   = var.environment
+  db_identifier = var.rds_db_identifier
+
+  master_username = var.rds_master_username
+
+  engine                 = var.rds_engine
+  engine_version         = var.rds_engine_version
+  parameter_group_family = var.rds_parameter_group_family
+
+  instance_class = var.rds_instance_class
+
+  allocated_storage     = var.rds_allocated_storage
+  max_allocated_storage = var.rds_max_allocated_storage
+  storage_type          = var.rds_storage_type
+
+  database_name = var.rds_database_name
+  port          = var.rds_port
+
+  multi_az = var.rds_multi_az
+
+  storage_encrypted = var.rds_storage_encrypted
+  kms_key_id        = var.rds_kms_key_id
+
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+
+  allowed_security_groups = var.rds_allowed_security_groups
+
+  backup_retention_period = var.rds_backup_retention_period
+
+  performance_insights_enabled = var.rds_performance_insights_enabled
+
+  monitoring_interval = var.rds_monitoring_interval
+
+  deletion_protection = var.rds_deletion_protection
+
+  skip_final_snapshot = var.rds_skip_final_snapshot
+
+  apply_immediately = var.rds_apply_immediately
+
+  iam_database_authentication_enabled = var.rds_iam_database_authentication_enabled
+
+  create_rds_connect_role = var.rds_create_connect_role
+
+  secret_recovery_window_in_days = var.rds_secret_recovery_window_in_days
+
+  tags = var.tags
 }

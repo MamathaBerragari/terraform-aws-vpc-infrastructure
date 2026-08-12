@@ -1,5 +1,4 @@
 locals {
-
   name = "${var.environment}-${var.db_identifier}"
 
   common_tags = merge(
@@ -10,4 +9,6 @@ locals {
     },
     var.tags
   )
+
+  secret_name = "${local.name}-credentials"
 }

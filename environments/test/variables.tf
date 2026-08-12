@@ -523,54 +523,240 @@ variable "eks_public_access_cidrs" {
 variable "karpenter_node_class_name" {
   description = "Name of the Karpenter EC2NodeClass."
   type        = string
+  default     = null
 }
 
 variable "karpenter_ami_family" {
   description = "AMI family used by Karpenter."
   type        = string
+  default     = null
 }
 
 variable "karpenter_ami_selector_alias" {
   description = "AMI selector alias used by Karpenter."
   type        = string
+  default     = null
 }
 
 variable "karpenter_node_name_prefix" {
   description = "Name prefix for Karpenter-provisioned nodes."
   type        = string
+  default     = null
 }
 
 variable "karpenter_discovery_tag_key" {
   description = "Tag key used by Karpenter to discover AWS resources."
   type        = string
+  default     = null
 }
 
 variable "karpenter_node_pool_name" {
   description = "Name of the Karpenter NodePool."
   type        = string
+  default     = null
 }
 
 variable "karpenter_node_pool_architecture" {
   description = "CPU architecture allowed for Karpenter nodes."
   type        = string
+  default     = null
 }
 
 variable "karpenter_node_pool_operating_system" {
   description = "Operating system allowed for Karpenter nodes."
   type        = string
+  default     = null
 }
 
 variable "karpenter_node_pool_capacity_types" {
   description = "Capacity types allowed for Karpenter nodes."
   type        = list(string)
+  default     = null
 }
 
 variable "karpenter_consolidation_policy" {
   description = "Karpenter NodePool consolidation policy."
   type        = string
+  default     = null
 }
 
 variable "karpenter_consolidate_after" {
   description = "How long Karpenter waits before consolidation."
+  type        = string
+  default     = null
+}
+
+variable "endpoint_ingress_cidrs" {
+  description = "CIDR blocks allowed to access VPC endpoint security groups"
+  type        = list(string)
+}
+
+
+variable "endpoint_protocol" {
+  description = "Protocol used by Interface VPC Endpoint ingress"
+  type        = string
+}
+
+
+
+
+variable "endpoint_egress_description" {
+  description = "Description for endpoint security group egress rule"
+  type        = string
+}
+
+variable "endpoint_port" {
+  description = "Port used by interface VPC endpoints"
+  type        = number
+}
+
+
+variable "endpoint_egress_from_port" {
+  description = "Starting port for endpoint egress"
+  type        = number
+}
+
+variable "endpoint_egress_to_port" {
+  description = "Ending port for endpoint egress"
+  type        = number
+}
+
+variable "endpoint_egress_protocol" {
+  description = "Protocol used by endpoint egress"
+  type        = string
+}
+
+variable "security_group_description" {
+  description = "Description for VPC endpoint security group"
+  type        = string
+}
+
+variable "enabled_cluster_log_types" {
+  description = "EKS control plane log types to enable"
+  type        = list(string)
+}
+variable "rds_db_identifier" {
+  type    = string
+  default = "postgres"
+}
+
+variable "rds_engine" {
+  type    = string
+  default = "postgres"
+}
+
+variable "rds_engine_version" {
+  type    = string
+  default = "16"
+}
+
+variable "rds_parameter_group_family" {
+  type    = string
+  default = "postgres16"
+}
+
+variable "rds_instance_class" {
+  type    = string
+  default = "db.t3.micro"
+}
+
+variable "rds_allocated_storage" {
+  type    = number
+  default = 20
+}
+
+variable "rds_max_allocated_storage" {
+  type    = number
+  default = 50
+}
+
+variable "rds_storage_type" {
+  type    = string
+  default = "gp3"
+}
+
+variable "rds_database_name" {
+  type    = string
+  default = "applicationdb"
+}
+
+variable "rds_port" {
+  type    = number
+  default = 5432
+}
+
+variable "rds_multi_az" {
+  type    = bool
+  default = false
+}
+
+variable "rds_storage_encrypted" {
+  type    = bool
+  default = true
+}
+
+variable "rds_kms_key_id" {
+  type    = string
+  default = null
+}
+
+variable "rds_allowed_security_groups" {
+  type    = list(string)
+  default = []
+}
+
+variable "rds_backup_retention_period" {
+  type    = number
+  default = 7
+}
+
+variable "rds_performance_insights_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "rds_monitoring_interval" {
+  type    = number
+  default = 0
+}
+
+variable "rds_deletion_protection" {
+  type    = bool
+  default = false
+}
+
+variable "rds_skip_final_snapshot" {
+  type    = bool
+  default = true
+}
+
+variable "rds_apply_immediately" {
+  type    = bool
+  default = true
+}
+
+variable "rds_iam_database_authentication_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "rds_create_connect_role" {
+  type    = bool
+  default = false
+}
+
+variable "rds_secret_recovery_window_in_days" {
+  type    = number
+  default = 0
+}
+
+
+variable "rds_master_username" {
+  description = "RDS master username"
+  type        = string
+}
+
+variable "endpoint_ingress_description" {
+  description = "Description for endpoint security group ingress rule"
   type        = string
 }

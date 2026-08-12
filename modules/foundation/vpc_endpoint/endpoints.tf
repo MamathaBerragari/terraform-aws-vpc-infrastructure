@@ -3,11 +3,7 @@
 #############################################################
 
 resource "aws_vpc_endpoint" "interface" {
-
-  for_each = {
-    for endpoint in var.interface_endpoints :
-    endpoint => endpoint
-  }
+  for_each = toset(var.interface_endpoints)
 
   vpc_id = var.vpc_id
 
@@ -26,7 +22,7 @@ resource "aws_vpc_endpoint" "interface" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.name}-${each.key}"
+      Name = "${local.name}-${each.value}"
     }
   )
 }
@@ -36,11 +32,7 @@ resource "aws_vpc_endpoint" "interface" {
 #############################################################
 
 resource "aws_vpc_endpoint" "gateway" {
-
-  for_each = {
-    for endpoint in var.gateway_endpoints :
-    endpoint => endpoint
-  }
+  for_each = toset(var.gateway_endpoints)
 
   vpc_id = var.vpc_id
 
@@ -53,7 +45,7 @@ resource "aws_vpc_endpoint" "gateway" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.name}-${each.key}"
+      Name = "${local.name}-${each.value}"
     }
   )
 }

@@ -1,97 +1,171 @@
 variable "environment" {
-  type = string
+  description = "Environment name"
+  type        = string
 }
 
 variable "db_identifier" {
-  type = string
-}
-
-variable "database_name" {
-  type = string
+  description = "RDS identifier suffix"
+  type        = string
 }
 
 variable "engine" {
-  type    = string
-  default = "postgres"
+  description = "RDS database engine"
+  type        = string
+  default     = "postgres"
 }
 
 variable "engine_version" {
-  type = string
+  description = "PostgreSQL engine version"
+  type        = string
+  default     = "16"
+}
+
+variable "parameter_group_family" {
+  description = "RDS parameter group family"
+  type        = string
+  default     = "postgres16"
 }
 
 variable "instance_class" {
-  type = string
+  description = "RDS instance class"
+  type        = string
 }
 
 variable "allocated_storage" {
-  type = number
+  description = "Initial storage in GB"
+  type        = number
 }
 
 variable "max_allocated_storage" {
-  type = number
+  description = "Maximum autoscaling storage in GB"
+  type        = number
 }
 
-variable "username" {
-  type = string
+variable "storage_type" {
+  description = "RDS storage type"
+  type        = string
+  default     = "gp3"
 }
 
-variable "password" {
-  type      = string
-  sensitive = true
+variable "database_name" {
+  description = "Initial database name"
+  type        = string
 }
 
 variable "port" {
-  type    = number
-  default = 5432
+  description = "Database port"
+  type        = number
+  default     = 5432
 }
 
 variable "multi_az" {
-  type    = bool
-  default = true
+  description = "Enable Multi-AZ"
+  type        = bool
+  default     = false
 }
 
 variable "storage_encrypted" {
-  type    = bool
-  default = true
+  description = "Enable storage encryption"
+  type        = bool
+  default     = true
 }
 
 variable "kms_key_id" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
+  description = "KMS key ARN or ID"
+  type        = string
+  default     = null
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
+  description = "Private subnet IDs for RDS"
+  type        = list(string)
+}
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
 }
 
 variable "allowed_security_groups" {
-  type = list(string)
+  description = "Security groups allowed to connect to RDS"
+  type        = list(string)
+  default     = []
 }
 
 variable "backup_retention_period" {
-  type    = number
-  default = 7
+  description = "Number of days to retain automated backups"
+  type        = number
+  default     = 7
+}
+
+variable "backup_window" {
+  description = "Preferred backup window"
+  type        = string
+  default     = "18:00-19:00"
+}
+
+variable "maintenance_window" {
+  description = "Preferred maintenance window"
+  type        = string
+  default     = "sun:19:00-sun:20:00"
 }
 
 variable "performance_insights_enabled" {
-  type    = bool
-  default = true
+  description = "Enable Performance Insights"
+  type        = bool
+  default     = false
 }
 
 variable "monitoring_interval" {
-  type    = number
-  default = 60
+  description = "Enhanced monitoring interval in seconds. 0 disables it."
+  type        = number
+  default     = 0
 }
 
 variable "deletion_protection" {
-  type    = bool
-  default = true
+  description = "Protect RDS from deletion"
+  type        = bool
+  default     = false
+}
+
+variable "skip_final_snapshot" {
+  description = "Skip final snapshot when destroying RDS"
+  type        = bool
+  default     = true
+}
+
+variable "apply_immediately" {
+  description = "Apply changes immediately"
+  type        = bool
+  default     = true
+}
+
+variable "iam_database_authentication_enabled" {
+  description = "Enable IAM database authentication"
+  type        = bool
+  default     = true
+}
+
+variable "create_rds_connect_role" {
+  description = "Create EC2 IAM role for IAM database authentication"
+  type        = bool
+  default     = false
+}
+
+
+variable "secret_recovery_window_in_days" {
+  description = "Secrets Manager recovery window"
+  type        = number
+  default     = 0
+}
+
+variable "master_username" {
+  description = "RDS master username"
+  type        = string
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Additional tags to apply to RDS resources"
+  type        = map(string)
+  default     = {}
 }

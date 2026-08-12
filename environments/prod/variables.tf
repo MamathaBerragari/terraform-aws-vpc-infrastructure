@@ -849,3 +849,155 @@ variable "enable_karpenter" {
   description = "Whether Karpenter is enabled for the EKS cluster."
   type        = bool
 }
+
+variable "rds_db_identifier" {
+  type    = string
+  default = "postgres"
+}
+
+variable "rds_engine" {
+  type    = string
+  default = "postgres"
+}
+
+variable "rds_engine_version" {
+  type    = string
+  default = "16"
+}
+
+variable "rds_parameter_group_family" {
+  type    = string
+  default = "postgres16"
+}
+
+variable "rds_instance_class" {
+  type    = string
+  default = "db.t3.micro"
+}
+
+variable "rds_allocated_storage" {
+  type    = number
+  default = 20
+}
+
+variable "rds_max_allocated_storage" {
+  type    = number
+  default = 50
+}
+
+variable "rds_storage_type" {
+  type    = string
+  default = "gp3"
+}
+
+variable "rds_database_name" {
+  type    = string
+  default = "applicationdb"
+}
+
+variable "rds_port" {
+  type    = number
+  default = 5432
+}
+
+variable "rds_multi_az" {
+  type    = bool
+  default = false
+}
+
+variable "rds_storage_encrypted" {
+  type    = bool
+  default = true
+}
+
+variable "rds_kms_key_id" {
+  type    = string
+  default = null
+}
+
+variable "rds_allowed_security_groups" {
+  type    = list(string)
+  default = []
+}
+
+variable "rds_backup_retention_period" {
+  type    = number
+  default = 7
+}
+
+variable "rds_performance_insights_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "rds_monitoring_interval" {
+  type    = number
+  default = 0
+}
+
+variable "rds_deletion_protection" {
+  type    = bool
+  default = false
+}
+
+variable "rds_skip_final_snapshot" {
+  type    = bool
+  default = true
+}
+
+variable "rds_apply_immediately" {
+  type    = bool
+  default = true
+}
+
+variable "rds_iam_database_authentication_enabled" {
+  type    = bool
+  default = true
+}
+
+variable "rds_create_connect_role" {
+  type    = bool
+  default = false
+}
+
+variable "rds_secret_recovery_window_in_days" {
+  type    = number
+  default = 0
+}
+
+variable "endpoint_ingress_description" {
+  type = string
+}
+
+variable "endpoint_port" {
+  type = number
+}
+
+variable "endpoint_protocol" {
+  type = string
+}
+
+variable "endpoint_egress_description" {
+  type = string
+}
+
+variable "endpoint_egress_from_port" {
+  type = number
+}
+
+variable "endpoint_egress_to_port" {
+  type = number
+}
+
+variable "endpoint_egress_protocol" {
+  type = string
+}
+
+variable "security_group_description" {
+  type = string
+}
+
+variable "rds_master_username" {
+  description = "RDS master username"
+  type        = string
+}

@@ -1,26 +1,24 @@
 resource "aws_security_group" "this" {
-
   name        = "${var.project_name}-${var.environment}-vpce-sg"
-  description = "Security Group for Interface VPC Endpoints"
-
-  vpc_id = var.vpc_id
+  description = var.security_group_description
+  vpc_id      = var.vpc_id
 
   ingress {
-    description = "HTTPS from approved CIDRs"
+    description = var.endpoint_ingress_description
 
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
+    from_port = var.endpoint_port
+    to_port   = var.endpoint_port
+    protocol  = var.endpoint_protocol
 
     cidr_blocks = var.endpoint_ingress_cidrs
   }
 
   egress {
-    description = "Endpoint egress"
+    description = var.endpoint_egress_description
 
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
+    from_port = var.endpoint_egress_from_port
+    to_port   = var.endpoint_egress_to_port
+    protocol  = var.endpoint_egress_protocol
 
     cidr_blocks = var.endpoint_egress_cidrs
   }

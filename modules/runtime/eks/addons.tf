@@ -25,3 +25,23 @@ resource "aws_eks_addon" "this" {
     aws_iam_role_policy_attachment.ebs_csi
   ]
 }
+
+moved {
+  from = aws_eks_addon.coredns
+  to   = aws_eks_addon.this["coredns"]
+}
+
+moved {
+  from = aws_eks_addon.ebs_csi
+  to   = aws_eks_addon.this["ebs_csi"]
+}
+
+moved {
+  from = aws_eks_addon.kube_proxy
+  to   = aws_eks_addon.this["kube_proxy"]
+}
+
+moved {
+  from = aws_eks_addon.vpc_cni
+  to   = aws_eks_addon.this["vpc_cni"]
+}
