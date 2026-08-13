@@ -1027,3 +1027,8 @@ variable "rds_maintenance_window" {
   description = "Preferred maintenance window"
   type        = string
 }
+
+variable "ecr_kms_encryption_enabled" {
+  description = "Whether the ECR repository uses a KMS key."
+  type        = bool
+}

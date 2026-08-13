@@ -377,3 +377,5 @@ security_group_description = "Security Group for Interface VPC Endpoints"
 
 rds_backup_window      = "18:00-19:00"
 rds_maintenance_window = "sun:19:00-sun:20:00"
+
+ecr_kms_encryption_enabled = false

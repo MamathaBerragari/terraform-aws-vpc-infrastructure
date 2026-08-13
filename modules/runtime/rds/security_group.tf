@@ -3,7 +3,10 @@ resource "aws_security_group" "rds" {
   description = "Security Group for Amazon RDS"
   vpc_id      = var.vpc_id
 
-  ingress {
+  dynamic "ingress" {
+  for_each = length(var.allowed_security_groups) > 0 ? [1] : []
+
+  content {
     description = "Database access from approved security groups"
 
     from_port = var.port
@@ -12,6 +15,7 @@ resource "aws_security_group" "rds" {
 
     security_groups = var.allowed_security_groups
   }
+}
 
   egress {
     description = "Allow outbound traffic"

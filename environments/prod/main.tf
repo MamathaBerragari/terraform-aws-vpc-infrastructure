@@ -56,10 +56,10 @@ module "vpc_endpoint" {
 module "ecr" {
   source = "../../modules/runtime/ecr"
 
-  repository_name = var.ecr_repository_name
-
-  image_tag_mutability = var.ecr_image_tag_mutability
-  scan_on_push         = var.ecr_scan_on_push
+  repository_name        = var.ecr_repository_name
+  kms_encryption_enabled = var.ecr_kms_encryption_enabled
+  image_tag_mutability   = var.ecr_image_tag_mutability
+  scan_on_push           = var.ecr_scan_on_push
 
   enhanced_scanning_enabled = var.ecr_enhanced_scanning_enabled
   enhanced_scanning_type    = var.ecr_enhanced_scanning_type
