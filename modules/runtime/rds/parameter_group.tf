@@ -7,17 +7,17 @@ resource "aws_db_parameter_group" "this" {
 
   parameter {
     name  = "log_connections"
-    value = "1"
+    value = var.rds_log_connections
   }
 
   parameter {
     name  = "log_disconnections"
-    value = "1"
+    value = var.rds_log_disconnections
   }
 
   parameter {
     name  = "log_statement"
-    value = "ddl"
+    value = var.rds_log_statement
   }
 
   tags = local.common_tags

@@ -1,16 +1,11 @@
+###############################################################
+# AWS / EKS BASIC CONFIGURATION
+###############################################################
+
 variable "region" {
   description = "AWS region for the EKS environment"
   type        = string
-
-  validation {
-    condition     = length(trimspace(var.region)) > 0
-    error_message = "Region must not be empty."
-  }
 }
-
-###############################################################
-# Cluster Configuration
-###############################################################
 
 variable "cluster_name" {
   description = "EKS cluster name"
@@ -20,35 +15,16 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Kubernetes version for the EKS cluster"
   type        = string
-
-  validation {
-    condition     = can(regex("^[0-9]+\\.[0-9]+$", var.cluster_version))
-    error_message = "cluster_version must be in major.minor format, for example 1.31."
-  }
 }
 
 variable "ip_family" {
   description = "IP address family used by the EKS cluster"
   type        = string
-
-  validation {
-    condition     = contains(["ipv4", "ipv6"], var.ip_family)
-    error_message = "ip_family must be either ipv4 or ipv6."
-  }
 }
 
 variable "authentication_mode" {
   description = "EKS authentication mode"
   type        = string
-
-  validation {
-    condition = contains(
-      ["CONFIG_MAP", "API", "API_AND_CONFIG_MAP"],
-      var.authentication_mode
-    )
-
-    error_message = "authentication_mode must be CONFIG_MAP, API, or API_AND_CONFIG_MAP."
-  }
 }
 
 variable "bootstrap_cluster_creator_admin_permissions" {
@@ -56,8 +32,9 @@ variable "bootstrap_cluster_creator_admin_permissions" {
   type        = bool
 }
 
+
 ###############################################################
-# IAM Assume Role Configuration
+# EKS CLUSTER IAM ASSUME ROLE CONFIGURATION
 ###############################################################
 
 variable "cluster_assume_role_actions" {
@@ -76,7 +53,7 @@ variable "cluster_assume_role_principal_identifiers" {
 }
 
 variable "node_assume_role_actions" {
-  description = "IAM actions allowed in the EKS node assume role policy"
+  description = "IAM actions allowed in the EKS node IAM role assume policy"
   type        = list(string)
 }
 
@@ -90,8 +67,9 @@ variable "node_assume_role_principal_identifiers" {
   type        = list(string)
 }
 
+
 ###############################################################
-# IAM Role Naming
+# EKS IAM ROLE NAMING
 ###############################################################
 
 variable "cluster_role_name_suffix" {
@@ -104,8 +82,9 @@ variable "node_role_name_suffix" {
   type        = string
 }
 
+
 ###############################################################
-# EKS IAM Managed Policies
+# EKS IAM MANAGED POLICIES
 ###############################################################
 
 variable "cluster_policy_arn" {
@@ -128,8 +107,9 @@ variable "ecr_read_policy_arn" {
   type        = string
 }
 
+
 ###############################################################
-# Networking
+# NETWORKING
 ###############################################################
 
 variable "vpc_id" {
@@ -147,8 +127,9 @@ variable "control_plane_subnet_ids" {
   type        = list(string)
 }
 
+
 ###############################################################
-# API Endpoint
+# EKS API ENDPOINT
 ###############################################################
 
 variable "endpoint_private_access" {
@@ -166,8 +147,9 @@ variable "public_access_cidrs" {
   type        = list(string)
 }
 
+
 ###############################################################
-# Managed Node Group
+# MANAGED NODE GROUP
 ###############################################################
 
 variable "node_group_name" {
@@ -183,56 +165,28 @@ variable "instance_types" {
 variable "capacity_type" {
   description = "Capacity type for the managed node group"
   type        = string
-
-  validation {
-    condition = contains(
-      ["ON_DEMAND", "SPOT"],
-      var.capacity_type
-    )
-
-    error_message = "capacity_type must be ON_DEMAND or SPOT."
-  }
 }
 
 variable "desired_size" {
   description = "Desired number of nodes"
   type        = number
-
-  validation {
-    condition     = var.desired_size >= 0
-    error_message = "desired_size must be zero or greater."
-  }
 }
 
 variable "min_size" {
   description = "Minimum number of nodes"
   type        = number
-
-  validation {
-    condition     = var.min_size >= 0
-    error_message = "min_size must be zero or greater."
-  }
 }
 
 variable "max_size" {
   description = "Maximum number of nodes"
   type        = number
-
-  validation {
-    condition     = var.max_size >= var.min_size
-    error_message = "max_size must be greater than or equal to min_size."
-  }
 }
 
 variable "disk_size" {
   description = "Root volume size of managed node group instances in GiB"
   type        = number
-
-  validation {
-    condition     = var.disk_size > 0
-    error_message = "disk_size must be greater than zero."
-  }
 }
+
 variable "node_group_name_suffix" {
   description = "Suffix appended to the managed EKS node group name"
   type        = string
@@ -241,16 +195,11 @@ variable "node_group_name_suffix" {
 variable "max_unavailable" {
   description = "Maximum number of unavailable nodes during node group updates"
   type        = number
-
-  validation {
-    condition     = var.max_unavailable >= 1
-    error_message = "max_unavailable must be greater than or equal to 1."
-  }
 }
 
 
 ###############################################################
-# Launch Template
+# LAUNCH TEMPLATE
 ###############################################################
 
 variable "ami_type" {
@@ -258,8 +207,9 @@ variable "ami_type" {
   type        = string
 }
 
+
 ###############################################################
-# EKS Common Tag Configuration
+# EKS COMMON TAG CONFIGURATION
 ###############################################################
 
 variable "managed_by" {
@@ -272,8 +222,14 @@ variable "module_name" {
   type        = string
 }
 
+variable "tags" {
+  description = "Common tags"
+  type        = map(string)
+}
+
+
 ###############################################################
-# EKS Launch Template Configuration
+# EKS LAUNCH TEMPLATE CONFIGURATION
 ###############################################################
 
 variable "launch_template_name_suffix" {
@@ -289,29 +245,11 @@ variable "launch_template_update_default_version" {
 variable "launch_template_http_endpoint" {
   description = "EC2 instance metadata service HTTP endpoint configuration"
   type        = string
-
-  validation {
-    condition = contains(
-      ["enabled", "disabled"],
-      var.launch_template_http_endpoint
-    )
-
-    error_message = "launch_template_http_endpoint must be enabled or disabled."
-  }
 }
 
 variable "launch_template_http_tokens" {
   description = "EC2 instance metadata service token requirement"
   type        = string
-
-  validation {
-    condition = contains(
-      ["optional", "required"],
-      var.launch_template_http_tokens
-    )
-
-    error_message = "launch_template_http_tokens must be optional or required."
-  }
 }
 
 variable "launch_template_monitoring_enabled" {
@@ -329,8 +267,9 @@ variable "worker_node_name_suffix" {
   type        = string
 }
 
+
 ###############################################################
-# EKS CloudWatch CPU Alarm Configuration
+# EKS CLOUDWATCH CPU ALARM CONFIGURATION
 ###############################################################
 
 variable "cpu_alarm_name_suffix" {
@@ -383,8 +322,9 @@ variable "cpu_alarm_treat_missing_data" {
   type        = string
 }
 
+
 ###############################################################
-# EKS CloudWatch Log Group Configuration
+# EKS CLOUDWATCH LOG GROUP CONFIGURATION
 ###############################################################
 
 variable "eks_log_group_name_suffix" {
@@ -395,11 +335,6 @@ variable "eks_log_group_name_suffix" {
 variable "eks_log_retention_in_days" {
   description = "Number of days EKS CloudWatch logs are retained"
   type        = number
-
-  validation {
-    condition     = var.eks_log_retention_in_days > 0
-    error_message = "eks_log_retention_in_days must be greater than zero."
-  }
 }
 
 variable "eks_log_group_name_prefix" {
@@ -407,171 +342,103 @@ variable "eks_log_group_name_prefix" {
   type        = string
 }
 
+
 ###############################################################
-# Logging
+# EKS CONTROL PLANE LOGGING
 ###############################################################
 
 variable "enabled_cluster_log_types" {
   description = "EKS control plane log types enabled for the cluster"
   type        = list(string)
-
-  validation {
-    condition = alltrue([
-      for log_type in var.enabled_cluster_log_types :
-      contains(
-        [
-          "api",
-          "audit",
-          "authenticator",
-          "controllerManager",
-          "scheduler"
-        ],
-        log_type
-      )
-    ])
-
-    error_message = "enabled_cluster_log_types contains an unsupported EKS control plane log type."
-  }
 }
 
+
 ###############################################################
-# EKS Add-ons
+# EKS MANAGED ADD-ONS
 ###############################################################
 
 variable "eks_addons" {
   description = "EKS managed add-ons to install"
 
   type = map(object({
-    addon_name                  = string
-    addon_version               = optional(string)
-    resolve_conflicts_on_create = string
-    service_account_role_type   = string
+    addon_name                       = string
+    addon_version                    = optional(string)
+    resolve_conflicts_on_create      = string
+    requires_service_account_role    = optional(bool, false)
   }))
-
-  validation {
-    condition = alltrue([
-      for addon in values(var.eks_addons) :
-      contains(
-        ["OVERWRITE", "NONE"],
-        addon.resolve_conflicts_on_create
-      )
-    ])
-
-    error_message = "resolve_conflicts_on_create must be OVERWRITE or NONE."
-  }
-
-  validation {
-    condition = alltrue([
-      for addon in values(var.eks_addons) :
-      contains(
-        ["none", "ebs_csi"],
-        addon.service_account_role_type
-      )
-    ])
-
-    error_message = "service_account_role_type must be none or ebs_csi."
-  }
 }
 
-###############################################################
-# Tags
-###############################################################
-
-variable "tags" {
-  description = "Common tags"
-  type        = map(string)
-}
 
 ###############################################################
-# Karpenter
+# KARPENTER
 ###############################################################
 
 variable "kubernetes_version" {
   description = "Kubernetes version used by Karpenter"
-
-  type = string
-
-  validation {
-    condition = can(
-      regex(
-        "^[0-9]+\\.[0-9]+$",
-        var.kubernetes_version
-      )
-    )
-
-    error_message = "kubernetes_version must be in major.minor format, for example 1.31."
-  }
+  type        = string
 }
 
 variable "karpenter_chart_version" {
   description = "Karpenter Helm chart version"
   type        = string
-
-  validation {
-    condition     = length(trimspace(var.karpenter_chart_version)) > 0
-    error_message = "karpenter_chart_version must not be empty."
-  }
 }
 
-
-
 variable "karpenter_node_class_name" {
-  description = "Name of the Karpenter EC2NodeClass."
+  description = "Name of the Karpenter EC2NodeClass"
   type        = string
 }
 
 variable "karpenter_ami_family" {
-  description = "AMI family used by Karpenter."
+  description = "AMI family used by Karpenter"
   type        = string
 }
 
 variable "karpenter_ami_selector_alias" {
-  description = "AMI selector alias used by Karpenter."
+  description = "AMI selector alias used by Karpenter"
   type        = string
 }
 
 variable "karpenter_node_name_prefix" {
-  description = "Name prefix for Karpenter-provisioned nodes."
+  description = "Name prefix for Karpenter-provisioned nodes"
   type        = string
 }
 
 variable "karpenter_discovery_tag_key" {
-  description = "Tag key used by Karpenter to discover AWS resources."
+  description = "Tag key used by Karpenter to discover AWS resources"
   type        = string
 }
 
 variable "karpenter_node_pool_name" {
-  description = "Name of the Karpenter NodePool."
+  description = "Name of the Karpenter NodePool"
   type        = string
 }
 
 variable "karpenter_node_pool_architecture" {
-  description = "CPU architecture allowed for Karpenter nodes."
+  description = "CPU architecture allowed for Karpenter nodes"
   type        = string
 }
 
 variable "karpenter_node_pool_operating_system" {
-  description = "Operating system allowed for Karpenter nodes."
+  description = "Operating system allowed for Karpenter nodes"
   type        = string
 }
 
 variable "karpenter_node_pool_capacity_types" {
-  description = "Capacity types allowed for Karpenter nodes."
+  description = "Capacity types allowed for Karpenter nodes"
   type        = list(string)
 }
 
 variable "karpenter_consolidation_policy" {
-  description = "Karpenter NodePool consolidation policy."
+  description = "Karpenter NodePool consolidation policy"
   type        = string
 }
 
 variable "karpenter_consolidate_after" {
-  description = "How long Karpenter waits before consolidation."
+  description = "How long Karpenter waits before consolidation"
   type        = string
 }
 
 variable "enable_karpenter" {
-  description = "Whether to deploy Karpenter."
+  description = "Whether to deploy Karpenter"
   type        = bool
-  default     = false
 }

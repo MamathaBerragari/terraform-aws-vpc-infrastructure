@@ -35,15 +35,6 @@ variable "enhanced_scanning_enabled" {
 variable "enhanced_scanning_type" {
   description = "Enhanced ECR scanning frequency."
   type        = string
-
-  validation {
-    condition = contains(
-      ["CONTINUOUS_SCAN", "SCAN_ON_PUSH"],
-      var.enhanced_scanning_type
-    )
-
-    error_message = "enhanced_scanning_type must be CONTINUOUS_SCAN or SCAN_ON_PUSH."
-  }
 }
 
 variable "repository_read_principals" {
@@ -59,15 +50,6 @@ variable "repository_write_principals" {
 variable "encryption_type" {
   description = "ECR repository encryption type."
   type        = string
-
-  validation {
-    condition = contains(
-      ["AES256", "KMS"],
-      var.encryption_type
-    )
-
-    error_message = "encryption_type must be AES256 or KMS."
-  }
 }
 
 variable "kms_key_arn" {
@@ -88,16 +70,6 @@ variable "kms_key_arn" {
 ############################################################
 # ECR Lifecycle Configuration
 ############################################################
-
-variable "lifecycle_rule_priority" {
-  description = "Priority of the ECR lifecycle rule."
-  type        = number
-
-  validation {
-    condition     = var.lifecycle_rule_priority >= 1
-    error_message = "lifecycle_rule_priority must be greater than or equal to 1."
-  }
-}
 
 variable "lifecycle_description" {
   description = "Description of the ECR lifecycle rule."
@@ -121,15 +93,6 @@ variable "lifecycle_tag_status" {
 variable "lifecycle_count_type" {
   description = "Count type used by the ECR lifecycle rule."
   type        = string
-
-  validation {
-    condition = contains(
-      ["imageCountMoreThan", "sinceImagePushed"],
-      var.lifecycle_count_type
-    )
-
-    error_message = "lifecycle_count_type must be imageCountMoreThan or sinceImagePushed."
-  }
 }
 
 variable "lifecycle_max_image_count" {
@@ -145,12 +108,19 @@ variable "lifecycle_max_image_count" {
 variable "lifecycle_action_type" {
   description = "Action performed by the ECR lifecycle rule."
   type        = string
+}
+
+variable "lifecycle_rule_priority" {
+  description = "Priority of the ECR lifecycle rule."
+  type        = number
 
   validation {
-    condition     = var.lifecycle_action_type == "expire"
-    error_message = "lifecycle_action_type must be expire."
+    condition     = var.lifecycle_rule_priority >= 1
+    error_message = "lifecycle_rule_priority must be greater than or equal to 1."
   }
 }
+
+
 
 ############################################################
 # Resource Tag Configuration
@@ -182,21 +152,11 @@ variable "force_delete" {
 variable "enhanced_scanning_scan_type" {
   description = "ECR registry scanning type."
   type        = string
-
-  validation {
-    condition     = var.enhanced_scanning_scan_type == "ENHANCED"
-    error_message = "enhanced_scanning_scan_type must be ENHANCED."
-  }
 }
 
 variable "enhanced_scanning_filter_type" {
   description = "ECR repository filter type used for enhanced scanning."
   type        = string
-
-  validation {
-    condition     = var.enhanced_scanning_filter_type == "WILDCARD"
-    error_message = "enhanced_scanning_filter_type must be WILDCARD."
-  }
 }
 
 ############################################################
@@ -208,3 +168,8 @@ variable "tags" {
   type        = map(string)
 }
 
+
+variable "kms_encryption_enabled" {
+  description = "Whether the ECR repository uses a KMS key."
+  type        = bool
+}

@@ -11,19 +11,16 @@ variable "db_identifier" {
 variable "engine" {
   description = "RDS database engine"
   type        = string
-  default     = "postgres"
 }
 
 variable "engine_version" {
-  description = "PostgreSQL engine version"
+  description = "RDS database engine version"
   type        = string
-  default     = "16"
 }
 
 variable "parameter_group_family" {
   description = "RDS parameter group family"
   type        = string
-  default     = "postgres16"
 }
 
 variable "instance_class" {
@@ -32,19 +29,18 @@ variable "instance_class" {
 }
 
 variable "allocated_storage" {
-  description = "Initial storage in GB"
+  description = "Initial RDS storage in GB"
   type        = number
 }
 
 variable "max_allocated_storage" {
-  description = "Maximum autoscaling storage in GB"
+  description = "Maximum RDS autoscaling storage in GB"
   type        = number
 }
 
 variable "storage_type" {
   description = "RDS storage type"
   type        = string
-  default     = "gp3"
 }
 
 variable "database_name" {
@@ -53,110 +49,94 @@ variable "database_name" {
 }
 
 variable "port" {
-  description = "Database port"
+  description = "RDS database port"
   type        = number
-  default     = 5432
 }
 
 variable "multi_az" {
-  description = "Enable Multi-AZ"
+  description = "Enable Multi-AZ deployment"
   type        = bool
-  default     = false
 }
 
 variable "storage_encrypted" {
-  description = "Enable storage encryption"
+  description = "Enable RDS storage encryption"
   type        = bool
-  default     = true
 }
 
 variable "kms_key_id" {
   description = "KMS key ARN or ID"
   type        = string
-  default     = null
+  nullable    = true
 }
 
 variable "private_subnet_ids" {
-  description = "Private subnet IDs for RDS"
+  description = "Private subnet IDs used by RDS"
   type        = list(string)
 }
 
 variable "vpc_id" {
-  description = "VPC ID"
+  description = "VPC ID where RDS security group is created"
   type        = string
 }
 
 variable "allowed_security_groups" {
   description = "Security groups allowed to connect to RDS"
   type        = list(string)
-  default     = []
 }
 
 variable "backup_retention_period" {
-  description = "Number of days to retain automated backups"
+  description = "Automated backup retention period in days"
   type        = number
-  default     = 7
 }
 
 variable "backup_window" {
-  description = "Preferred backup window"
+  description = "Preferred automated backup window"
   type        = string
-  default     = "18:00-19:00"
 }
 
 variable "maintenance_window" {
-  description = "Preferred maintenance window"
+  description = "Preferred RDS maintenance window"
   type        = string
-  default     = "sun:19:00-sun:20:00"
 }
 
 variable "performance_insights_enabled" {
-  description = "Enable Performance Insights"
+  description = "Enable RDS Performance Insights"
   type        = bool
-  default     = false
 }
 
 variable "monitoring_interval" {
-  description = "Enhanced monitoring interval in seconds. 0 disables it."
+  description = "Enhanced monitoring interval in seconds"
   type        = number
-  default     = 0
 }
 
 variable "deletion_protection" {
-  description = "Protect RDS from deletion"
+  description = "Enable RDS deletion protection"
   type        = bool
-  default     = false
 }
 
 variable "skip_final_snapshot" {
-  description = "Skip final snapshot when destroying RDS"
+  description = "Skip final snapshot when RDS is destroyed"
   type        = bool
-  default     = true
 }
 
 variable "apply_immediately" {
-  description = "Apply changes immediately"
+  description = "Apply RDS modifications immediately"
   type        = bool
-  default     = true
 }
 
 variable "iam_database_authentication_enabled" {
   description = "Enable IAM database authentication"
   type        = bool
-  default     = true
 }
 
 variable "create_rds_connect_role" {
-  description = "Create EC2 IAM role for IAM database authentication"
+  description = "Create IAM role allowing EC2 to connect to RDS using IAM authentication"
   type        = bool
-  default     = false
 }
 
-
 variable "secret_recovery_window_in_days" {
-  description = "Secrets Manager recovery window"
+  description = "Secrets Manager recovery window in days"
   type        = number
-  default     = 0
 }
 
 variable "master_username" {
@@ -164,8 +144,22 @@ variable "master_username" {
   type        = string
 }
 
+variable "rds_log_connections" {
+  description = "PostgreSQL log_connections parameter value"
+  type        = string
+}
+
+variable "rds_log_disconnections" {
+  description = "PostgreSQL log_disconnections parameter value"
+  type        = string
+}
+
+variable "rds_log_statement" {
+  description = "PostgreSQL log_statement parameter value"
+  type        = string
+}
+
 variable "tags" {
-  description = "Additional tags to apply to RDS resources"
+  description = "Additional tags applied to RDS resources"
   type        = map(string)
-  default     = {}
 }

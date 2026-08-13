@@ -89,9 +89,9 @@ ecr_force_delete = false
 ecr_enhanced_scanning_enabled = true
 ecr_enhanced_scanning_type    = "CONTINUOUS_SCAN"
 
-ecr_encryption_type = "AES256"
-ecr_kms_key_arn     = null
-
+ecr_encryption_type         = "AES256"
+ecr_kms_key_arn             = null
+ecr_kms_encryption_enabled  = false
 ecr_lifecycle_rule_priority = 1
 ecr_lifecycle_description   = "Expire old images"
 ecr_lifecycle_tag_status    = "any"
@@ -191,33 +191,35 @@ eks_ecr_read_policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryRea
 # EKS ADD-ONS
 # ============================================================
 
+
+# ============================================================
+# EKS MANAGED ADD-ONS
+# ============================================================
+
 eks_addons = {
   vpc_cni = {
     addon_name                  = "vpc-cni"
     addon_version               = null
     resolve_conflicts_on_create = "OVERWRITE"
-    service_account_role_type   = "none"
   }
 
   coredns = {
     addon_name                  = "coredns"
     addon_version               = null
     resolve_conflicts_on_create = "OVERWRITE"
-    service_account_role_type   = "none"
   }
 
   kube_proxy = {
     addon_name                  = "kube-proxy"
     addon_version               = null
     resolve_conflicts_on_create = "OVERWRITE"
-    service_account_role_type   = "none"
   }
 
   ebs_csi = {
-    addon_name                  = "aws-ebs-csi-driver"
-    addon_version               = null
-    resolve_conflicts_on_create = "OVERWRITE"
-    service_account_role_type   = "ebs_csi"
+    addon_name                    = "aws-ebs-csi-driver"
+    addon_version                 = null
+    resolve_conflicts_on_create   = "OVERWRITE"
+    requires_service_account_role = true
   }
 }
 
@@ -308,6 +310,9 @@ eks_log_group_name_suffix = "/cluster"
 eks_log_retention_in_days = 30
 
 
+
+
+
 # ============================================================
 # KARPENTER
 # ============================================================
@@ -327,3 +332,35 @@ karpenter_node_pool_capacity_types   = ["on-demand", "spot"]
 karpenter_consolidation_policy = "WhenEmptyOrUnderutilized"
 karpenter_consolidate_after    = "1m"
 rds_master_username            = "postgresadmin"
+
+
+rds_log_connections    = "1"
+rds_log_disconnections = "1"
+rds_log_statement      = "ddl"
+
+rds_db_identifier                       = "postgres"
+rds_engine                              = "postgres"
+rds_engine_version                      = "16"
+rds_parameter_group_family              = "postgres16"
+rds_instance_class                      = "db.t3.micro"
+rds_allocated_storage                   = 20
+rds_max_allocated_storage               = 50
+rds_storage_type                        = "gp3"
+rds_database_name                       = "applicationdb"
+rds_port                                = 5432
+rds_multi_az                            = false
+rds_storage_encrypted                   = true
+rds_backup_retention_period             = 7
+rds_backup_window                       = "18:00-19:00"
+rds_maintenance_window                  = "sun:19:00-sun:20:00"
+rds_performance_insights_enabled        = false
+rds_monitoring_interval                 = 0
+rds_deletion_protection                 = false
+rds_skip_final_snapshot                 = true
+rds_apply_immediately                   = true
+rds_iam_database_authentication_enabled = true
+rds_create_connect_role                 = false
+rds_secret_recovery_window_in_days      = 0
+
+rds_kms_key_id              = null
+rds_allowed_security_groups = []

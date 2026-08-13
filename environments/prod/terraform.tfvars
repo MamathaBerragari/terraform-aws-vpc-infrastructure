@@ -174,9 +174,7 @@ eks_ecr_read_policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryRea
 ############################################################
 # EKS ADD-ONS
 ############################################################
-
 eks_addons = {
-
   vpc_cni = {
     addon_name                  = "vpc-cni"
     addon_version               = null
@@ -360,6 +358,12 @@ rds_create_connect_role = false
 
 rds_secret_recovery_window_in_days = 0
 
+
+rds_log_connections    = "1"
+rds_log_disconnections = "1"
+rds_log_statement      = "ddl"
+
+
 endpoint_ingress_description = "Allow HTTPS from VPC"
 endpoint_port                = 443
 endpoint_protocol            = "tcp"
@@ -370,3 +374,6 @@ endpoint_egress_to_port     = 0
 endpoint_egress_protocol    = "-1"
 
 security_group_description = "Security Group for Interface VPC Endpoints"
+
+rds_backup_window      = "18:00-19:00"
+rds_maintenance_window = "sun:19:00-sun:20:00"

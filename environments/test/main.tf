@@ -58,6 +58,8 @@ module "ecr" {
 
   repository_name = var.ecr_repository_name
 
+  kms_encryption_enabled = var.ecr_kms_encryption_enabled
+
   image_tag_mutability = var.ecr_image_tag_mutability
   scan_on_push         = var.ecr_scan_on_push
 
@@ -359,51 +361,51 @@ moved {
 module "rds" {
   source = "../../modules/runtime/rds"
 
-  environment   = var.environment
-  db_identifier = var.rds_db_identifier
+  environment = var.environment
 
-  master_username = var.rds_master_username
 
+  db_identifier          = var.rds_db_identifier
   engine                 = var.rds_engine
   engine_version         = var.rds_engine_version
   parameter_group_family = var.rds_parameter_group_family
-
-  instance_class = var.rds_instance_class
+  instance_class         = var.rds_instance_class
 
   allocated_storage     = var.rds_allocated_storage
   max_allocated_storage = var.rds_max_allocated_storage
   storage_type          = var.rds_storage_type
 
-  database_name = var.rds_database_name
-  port          = var.rds_port
+  database_name   = var.rds_database_name
+  master_username = var.rds_master_username
+  port            = var.rds_port
 
-  multi_az = var.rds_multi_az
-
+  multi_az          = var.rds_multi_az
   storage_encrypted = var.rds_storage_encrypted
   kms_key_id        = var.rds_kms_key_id
 
-  vpc_id             = module.vpc.vpc_id
   private_subnet_ids = module.vpc.private_subnet_ids
+  vpc_id             = module.vpc.vpc_id
 
   allowed_security_groups = var.rds_allowed_security_groups
 
   backup_retention_period = var.rds_backup_retention_period
+  backup_window           = var.rds_backup_window
+  maintenance_window      = var.rds_maintenance_window
 
   performance_insights_enabled = var.rds_performance_insights_enabled
-
-  monitoring_interval = var.rds_monitoring_interval
+  monitoring_interval          = var.rds_monitoring_interval
 
   deletion_protection = var.rds_deletion_protection
-
   skip_final_snapshot = var.rds_skip_final_snapshot
-
-  apply_immediately = var.rds_apply_immediately
+  apply_immediately   = var.rds_apply_immediately
 
   iam_database_authentication_enabled = var.rds_iam_database_authentication_enabled
-
-  create_rds_connect_role = var.rds_create_connect_role
+  create_rds_connect_role             = var.rds_create_connect_role
 
   secret_recovery_window_in_days = var.rds_secret_recovery_window_in_days
 
-  tags = var.tags
+  rds_log_connections    = var.rds_log_connections
+  rds_log_disconnections = var.rds_log_disconnections
+  rds_log_statement      = var.rds_log_statement
+
+  tags = local.common_tags
 }

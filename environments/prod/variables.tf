@@ -1001,3 +1001,29 @@ variable "rds_master_username" {
   description = "RDS master username"
   type        = string
 }
+
+variable "rds_log_connections" {
+  description = "PostgreSQL log_connections parameter value."
+  type        = string
+}
+
+variable "rds_log_disconnections" {
+  description = "PostgreSQL log_disconnections parameter value."
+  type        = string
+}
+
+variable "rds_log_statement" {
+  description = "PostgreSQL log_statement parameter value."
+  type        = string
+}
+
+
+variable "rds_backup_window" {
+  description = "Preferred backup window"
+  type        = string
+}
+
+variable "rds_maintenance_window" {
+  description = "Preferred maintenance window"
+  type        = string
+}

@@ -254,35 +254,11 @@ variable "eks_addons" {
   description = "EKS managed add-ons configured for this environment."
 
   type = map(object({
-    addon_name                  = string
-    addon_version               = optional(string)
-    resolve_conflicts_on_create = string
-    service_account_role_type   = string
+    addon_name                    = string
+    addon_version                 = optional(string)
+    resolve_conflicts_on_create   = string
+    requires_service_account_role = optional(bool, false)
   }))
-
-  validation {
-    condition = alltrue([
-      for addon in values(var.eks_addons) :
-      contains(
-        ["OVERWRITE", "NONE"],
-        addon.resolve_conflicts_on_create
-      )
-    ])
-
-    error_message = "resolve_conflicts_on_create must be OVERWRITE or NONE."
-  }
-
-  validation {
-    condition = alltrue([
-      for addon in values(var.eks_addons) :
-      contains(
-        ["none", "ebs_csi"],
-        addon.service_account_role_type
-      )
-    ])
-
-    error_message = "service_account_role_type must be none or ebs_csi."
-  }
 }
 
 variable "eks_cluster_assume_role_actions" {
@@ -598,8 +574,6 @@ variable "endpoint_protocol" {
 }
 
 
-
-
 variable "endpoint_egress_description" {
   description = "Description for endpoint security group egress rule"
   type        = string
@@ -635,10 +609,12 @@ variable "enabled_cluster_log_types" {
   description = "EKS control plane log types to enable"
   type        = list(string)
 }
+
 variable "rds_db_identifier" {
-  type    = string
-  default = "postgres"
+  description = "RDS instance identifier"
+  type        = string
 }
+
 
 variable "rds_engine" {
   type    = string
@@ -759,4 +735,33 @@ variable "rds_master_username" {
 variable "endpoint_ingress_description" {
   description = "Description for endpoint security group ingress rule"
   type        = string
+}
+
+variable "rds_log_connections" {
+  description = "PostgreSQL log_connections parameter value."
+  type        = string
+}
+
+variable "rds_log_disconnections" {
+  description = "PostgreSQL log_disconnections parameter value."
+  type        = string
+}
+
+variable "rds_log_statement" {
+  description = "PostgreSQL log_statement parameter value."
+  type        = string
+}
+variable "rds_backup_window" {
+  description = "Preferred automated backup window"
+  type        = string
+}
+
+variable "rds_maintenance_window" {
+  description = "Preferred RDS maintenance window"
+  type        = string
+}
+
+variable "ecr_kms_encryption_enabled" {
+  description = "Whether ECR repository encryption uses KMS."
+  type        = bool
 }

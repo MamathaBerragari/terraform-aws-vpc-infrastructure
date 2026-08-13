@@ -8,7 +8,7 @@ resource "aws_ecr_registry_scanning_configuration" "this" {
 
     repository_filter {
       filter      = local.repository_name
-      filter_type = "WILDCARD"
+      filter_type = var.enhanced_scanning_filter_type
     }
   }
 }
